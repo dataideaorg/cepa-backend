@@ -1,6 +1,33 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import URLValidator
+import uuid
+import os
+
+
+def generate_uuid():
+    """Generate a unique UUID string for model primary keys"""
+    return str(uuid.uuid4())
+
+
+def upload_to_blog_images(instance, filename):
+    """Generate upload path for blog post images"""
+    return os.path.join('blog', 'images', filename)
+
+
+def upload_to_event_images(instance, filename):
+    """Generate upload path for event images"""
+    return os.path.join('events', 'images', filename)
+
+
+def upload_to_news_images(instance, filename):
+    """Generate upload path for news article images"""
+    return os.path.join('news', 'images', filename)
+
+
+def upload_to_publication_pdfs(instance, filename):
+    """Generate upload path for publication PDFs"""
+    return os.path.join('publications', 'pdfs', filename)
 
 
 class BlogPost(models.Model):
