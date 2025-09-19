@@ -178,7 +178,7 @@ CORS_ALLOW_CREDENTIALS = True
 MEDIA_URL = '/media/'
 
 # Railway volume configuration
-MEDIA_ROOT = '/data/media'
+MEDIA_ROOT = 'data/media'
 
 # Ensure media directory exists
 # os.makedirs(MEDIA_ROOT, exist_ok=True)
