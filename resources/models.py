@@ -32,13 +32,13 @@ def upload_to_publication_pdfs(instance, filename):
 
 class BlogPost(models.Model):
     """Model for blog posts and analysis articles"""
-    id = models.CharField(max_length=255, primary_key=True)
+    id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)
     title = models.TextField()
-    date = models.CharField(max_length=50)
+    date = models.DateField(default=timezone.now)
     category = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.CharField(max_length=500)
-    slug = models.CharField(max_length=500, unique=True)
+    image = models.ImageField(upload_to=upload_to_blog_images, blank=True, null=True)
+    slug = models.CharField(max_length=500, unique=True, blank=True)
     featured = models.BooleanField(default=False)
     content = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
@@ -55,13 +55,13 @@ class BlogPost(models.Model):
 
 class NewsArticle(models.Model):
     """Model for news articles and updates"""
-    id = models.CharField(max_length=255, primary_key=True)
+    id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)
     title = models.TextField()
-    date = models.CharField(max_length=50)
+    date = models.DateField(default=timezone.now)
     category = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.CharField(max_length=500)
-    slug = models.CharField(max_length=500, unique=True)
+    image = models.ImageField(upload_to=upload_to_news_images, blank=True, null=True)
+    slug = models.CharField(max_length=500, unique=True, blank=True)
     featured = models.BooleanField(default=False)
     content = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
@@ -85,14 +85,14 @@ class Publication(models.Model):
         ('Analysis', 'Analysis'),
     ]
 
-    id = models.CharField(max_length=255, primary_key=True)
+    id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)
     title = models.TextField()
     type = models.CharField(max_length=100, choices=PUBLICATION_TYPES)
-    date = models.CharField(max_length=50)
+    date = models.DateField(default=timezone.now)
     description = models.TextField()
     category = models.CharField(max_length=100)
     url = models.URLField(blank=True, null=True, validators=[URLValidator()])
-    pdf = models.CharField(max_length=500, blank=True, null=True)
+    pdf = models.FileField(upload_to=upload_to_publication_pdfs, blank=True, null=True)
     featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
@@ -114,15 +114,15 @@ class Event(models.Model):
         ('cancelled', 'Cancelled'),
     ]
 
-    id = models.CharField(max_length=255, primary_key=True)
+    id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)
     title = models.TextField()
-    date = models.CharField(max_length=50)
-    time = models.CharField(max_length=50)
+    date = models.DateField(default=timezone.now)
+    time = models.TimeField()
     location = models.CharField(max_length=200)
     category = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.CharField(max_length=500)
-    slug = models.CharField(max_length=500, unique=True)
+    image = models.ImageField(upload_to=upload_to_event_images, blank=True, null=True)
+    slug = models.CharField(max_length=500, unique=True, blank=True)
     featured = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=EVENT_STATUS, default='upcoming')
     created_at = models.DateTimeField(default=timezone.now)
