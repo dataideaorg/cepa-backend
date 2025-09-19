@@ -19,6 +19,13 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://cepa-backend-production.up.railway.app",
+    "https://cepa.or.ug",
+    "https://www.cepa.or.ug",
+    "https://cepa.or.ug",
+]
+
 
 # Application definition
 
