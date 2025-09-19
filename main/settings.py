@@ -181,9 +181,10 @@ MEDIA_URL = '/media/'
 if os.environ.get('RAILWAY_ENVIRONMENT_NAME'):
     # Railway volume is mounted at /data/media
     MEDIA_ROOT = os.environ.get('RAILWAY_VOLUME_MOUNT_PATH')
+    print(MEDIA_ROOT)
 else:
     # Local development media directory
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+    
 # Ensure media directory exists
 os.makedirs(MEDIA_ROOT, exist_ok=True)
