@@ -181,4 +181,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = '/data/media'
 
 # Ensure media directory exists
-os.makedirs(MEDIA_ROOT, exist_ok=True)
+# os.makedirs(MEDIA_ROOT, exist_ok=True)
