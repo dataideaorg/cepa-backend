@@ -36,7 +36,7 @@ class BlogPostViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(featured_posts, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_path='slug/(?P<slug>[^/.]+)')
     def by_slug(self, request, slug=None):
         """Get blog post by slug"""
         try:
