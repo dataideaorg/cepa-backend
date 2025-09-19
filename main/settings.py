@@ -178,12 +178,7 @@ CORS_ALLOW_CREDENTIALS = True
 MEDIA_URL = '/media/'
 
 # Railway volume configuration
-if os.environ.get('RAILWAY_ENVIRONMENT'):
-    # Railway volume is mounted at /data/media
-    MEDIA_ROOT = '/data/media'
-else:
-    # Local development media directory
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/data/media'
 
 # Ensure media directory exists
 os.makedirs(MEDIA_ROOT, exist_ok=True)
