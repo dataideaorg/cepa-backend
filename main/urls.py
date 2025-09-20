@@ -8,5 +8,6 @@ urlpatterns = [
     path('api/', include('resources.urls')),
 ]
 
-# Serve media files in development
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Serve media files
+if settings.DEBUG or settings.RAILWAY_ENVIRONMENT_NAME:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

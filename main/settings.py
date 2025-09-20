@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent   
+RAILWAY_ENVIRONMENT_NAME = os.environ.get('RAILWAY_ENVIRONMENT_NAME')
 
 
 # Quick-start development settings - unsuitable for production
@@ -178,7 +179,8 @@ CORS_ALLOW_CREDENTIALS = True
 MEDIA_URL = '/media/'
 
 # Railway volume configuration
-if os.environ.get('RAILWAY_ENVIRONMENT_NAME'):
+if RAILWAY_ENVIRONMENT_NAME:
+    print(RAILWAY_ENVIRONMENT_NAME)
     # Railway volume is mounted at /data/media
     MEDIA_ROOT = os.environ.get('RAILWAY_VOLUME_MOUNT_PATH')
     print(MEDIA_ROOT)

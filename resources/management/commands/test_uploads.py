@@ -46,7 +46,7 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f'  ✓ Directory exists: {directory}'))
         
         # Check Railway environment
-        if os.environ.get('RAILWAY_ENVIRONMENT'):
+        if settings.RAILWAY_ENVIRONMENT_NAME:
             self.stdout.write(self.style.SUCCESS('\n✓ Railway environment detected'))
             self.stdout.write(f'Using Railway volume path: {settings.MEDIA_ROOT}')
         else:
