@@ -1,97 +1,65 @@
 from django.contrib import admin
-from django.utils.html import format_html
-from django.urls import reverse
-from django.utils.safestring import mark_safe
-from .models import ContactSubmission
+from .models import Contact, Newsletter
 
-@admin.register(ContactSubmission)
-class ContactSubmissionAdmin(admin.ModelAdmin):
-    list_display = [
-        'name', 'email', 'subject', 'priority', 'status', 
-        'is_spam', 'created_at', 'response_time_display'
-    ]
-    list_filter = [
-        'status', 'priority', 'subject', 'is_spam', 
-        'created_at', 'responded_at'
-    ]
-    search_fields = [
-        'name', 'email', 'organization', 'message', 
-        'subject', 'admin_notes'
-    ]
-    readonly_fields = [
-        'id', 'created_at', 'updated_at', 'responded_at', 
-        'ip_address', 'user_agent', 'response_time_display'
-    ]
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'email', 'subject', 'inquiry_type', 'created_at', 'is_responded')
+    list_filter = ('inquiry_type', 'is_responded', 'created_at')
+    search_fields = ('first_name', 'last_name', 'email', 'subject', 'organization')
+    readonly_fields = ('id', 'created_at', 'updated_at')
+    list_editable = ('is_responded',)
+    date_hierarchy = 'created_at'
+    
     fieldsets = (
         ('Contact Information', {
-            'fields': ('name', 'email', 'phone', 'organization')
+            'fields': ('first_name', 'last_name', 'email', 'phone', 'organization')
         }),
-        ('Message Details', {
-            'fields': ('subject', 'message', 'priority')
+        ('Inquiry Details', {
+            'fields': ('inquiry_type', 'subject', 'message')
         }),
-        ('Status & Management', {
-            'fields': ('status', 'is_spam', 'admin_notes')
+        ('Status', {
+            'fields': ('is_responded',)
         }),
-        ('System Information', {
-            'fields': ('id', 'created_at', 'updated_at', 'responded_at', 'ip_address', 'user_agent'),
+        ('Timestamps', {
+            'fields': ('id', 'created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
     )
     
-    actions = ['mark_as_responded', 'mark_as_closed', 'mark_as_spam', 'mark_as_not_spam']
-    
-    def response_time_display(self, obj):
-        """Display response time in a readable format"""
-        if obj.response_time:
-            hours = obj.response_time
-            if hours < 1:
-                return f"{int(hours * 60)} minutes"
-            elif hours < 24:
-                return f"{hours:.1f} hours"
-            else:
-                days = hours / 24
-                return f"{days:.1f} days"
-        return "Not responded"
-    response_time_display.short_description = "Response Time"
-    
-    def mark_as_responded(self, request, queryset):
-        """Mark selected submissions as responded"""
-        count = 0
-        for submission in queryset:
-            if submission.status != 'responded':
-                submission.mark_as_responded()
-                count += 1
-        self.message_user(request, f"{count} submissions marked as responded.")
-    mark_as_responded.short_description = "Mark as responded"
-    
-    def mark_as_closed(self, request, queryset):
-        """Mark selected submissions as closed"""
-        count = queryset.update(status='closed')
-        self.message_user(request, f"{count} submissions marked as closed.")
-    mark_as_closed.short_description = "Mark as closed"
-    
-    def mark_as_spam(self, request, queryset):
-        """Mark selected submissions as spam"""
-        count = queryset.update(is_spam=True)
-        self.message_user(request, f"{count} submissions marked as spam.")
-    mark_as_spam.short_description = "Mark as spam"
-    
-    def mark_as_not_spam(self, request, queryset):
-        """Mark selected submissions as not spam"""
-        count = queryset.update(is_spam=False)
-        self.message_user(request, f"{count} submissions marked as not spam.")
-    mark_as_not_spam.short_description = "Mark as not spam"
-    
     def get_queryset(self, request):
-        """Optimize queryset for admin list view"""
         return super().get_queryset(request).select_related()
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ('email', 'first_name', 'last_name', 'is_active', 'subscribed_at')
+    list_filter = ('is_active', 'subscribed_at')
+    search_fields = ('email', 'first_name', 'last_name')
+    readonly_fields = ('id', 'subscribed_at')
+    list_editable = ('is_active',)
+    date_hierarchy = 'subscribed_at'
     
-    def has_delete_permission(self, request, obj=None):
-        """Only superusers can delete submissions"""
-        return request.user.is_superuser
+    fieldsets = (
+        ('Subscriber Information', {
+            'fields': ('email', 'first_name', 'last_name')
+        }),
+        ('Status', {
+            'fields': ('is_active',)
+        }),
+        ('Timestamps', {
+            'fields': ('id', 'subscribed_at', 'unsubscribed_at'),
+            'classes': ('collapse',)
+        }),
+    )
     
-    def get_readonly_fields(self, request, obj=None):
-        """Make certain fields read-only for non-superusers"""
-        if not request.user.is_superuser:
-            return self.readonly_fields + ['is_spam']
-        return self.readonly_fields
+    actions = ['activate_subscriptions', 'deactivate_subscriptions']
+    
+    def activate_subscriptions(self, request, queryset):
+        updated = queryset.update(is_active=True, unsubscribed_at=None)
+        self.message_user(request, f'{updated} subscriptions activated.')
+    activate_subscriptions.short_description = 'Activate selected subscriptions'
+    
+    def deactivate_subscriptions(self, request, queryset):
+        from django.utils import timezone
+        updated = queryset.update(is_active=False, unsubscribed_at=timezone.now())
+        self.message_user(request, f'{updated} subscriptions deactivated.')
+    deactivate_subscriptions.short_description = 'Deactivate selected subscriptions'

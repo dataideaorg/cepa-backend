@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Form Submission</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1e40af, #f59e0b, #10b981, #ef4444);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin: -30px -30px 30px -30px;
+        }
+        .field {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #1e40af;
+            border-radius: 4px;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+        .field-value {
+            color: #333;
+        }
+        .message-field {
+            background-color: #fff;
+            border: 2px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>New Contact Form Submission</h1>
+            <p>CEPA Website Contact Form</p>
+        </div>
+        
+        <div class="field">
+            <div class="field-label">Full Name:</div>
+            <div class="field-value">{{ name }}</div>
+        </div>
+        
+        <div class="field">
+            <div class="field-label">Email Address:</div>
+            <div class="field-value">{{ email }}</div>
+        </div>
+        
+        <div class="field">
+            <div class="field-label">Phone:</div>
+            <div class="field-value">{{ phone }}</div>
+        </div>
+        
+        <div class="field">
+            <div class="field-label">Organization:</div>
+            <div class="field-value">{{ organization }}</div>
+        </div>
+        
+        <div class="field">
+            <div class="field-label">Inquiry Type:</div>
+            <div class="field-value">{{ inquiry_type }}</div>
+        </div>
+        
+        <div class="field">
+            <div class="field-label">Subject:</div>
+            <div class="field-value">{{ subject }}</div>
+        </div>
+        
+        <div class="field">
+            <div class="field-label">Message:</div>
+            <div class="message-field">{{ message|linebreaks }}</div>
+        </div>
+        
+        <div class="footer">
+            <p>Submitted on: {{ created_at|date:"F d, Y \a\t g:i A" }}</p>
+            <p>This message was sent from the CEPA website contact form.</p>
+        </div>
+    </div>
+</body>
+</html>

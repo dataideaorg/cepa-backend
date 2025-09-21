@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to CEPA Newsletter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1e40af, #f59e0b, #10b981, #ef4444);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin: -30px -30px 30px -30px;
+        }
+        .welcome-box {
+            background-color: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .benefits {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .benefits ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .benefits li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+        .social-links {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #1e40af;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to CEPA Newsletter!</h1>
+            <p>Centre for Policy Analysis</p>
+        </div>
+        
+        <div class="welcome-box">
+            <h2>🎉 Subscription Confirmed!</h2>
+            <p>Hello {{ first_name }},</p>
+            <p>Thank you for subscribing to the CEPA newsletter. You're now part of our community of policy enthusiasts and governance advocates!</p>
+        </div>
+        
+        <p>As a subscriber, you'll receive regular updates about our latest research, policy analysis, and insights into Uganda's governance landscape.</p>
+        
+        <div class="benefits">
+            <h3>What to Expect:</h3>
+            <ul>
+                <li><strong>Policy Briefs:</strong> In-depth analysis of current policy issues</li>
+                <li><strong>Research Updates:</strong> Latest findings from our research projects</li>
+                <li><strong>Event Invitations:</strong> Exclusive access to conferences, workshops, and seminars</li>
+                <li><strong>Expert Insights:</strong> Commentary from leading policy experts</li>
+                <li><strong>Parliamentary Updates:</strong> Regular reports on parliamentary activities</li>
+                <li><strong>Fellowship Opportunities:</strong> Information about research and policy fellowships</li>
+            </ul>
+        </div>
+        
+        <p>Our newsletters are sent monthly, and we respect your privacy. You can unsubscribe at any time using the link at the bottom of our emails.</p>
+        
+        <div class="social-links">
+            <h3>Stay Connected:</h3>
+            <p>Follow us on social media for daily updates:</p>
+            <a href="#">Twitter</a> | 
+            <a href="#">Facebook</a> | 
+            <a href="#">LinkedIn</a> | 
+            <a href="#">YouTube</a>
+        </div>
+        
+        <div class="footer">
+            <p>Thank you for joining the CEPA community!</p>
+            <p><strong>Centre for Policy Analysis (CEPA)</strong><br>
+            Advancing good governance through policy research and analysis<br>
+            Kampala, Uganda | www.cepa.or.ug</p>
+            <p style="font-size: 12px; margin-top: 20px;">
+                This is an automated confirmation email. If you didn't subscribe to our newsletter, 
+                please contact us at info@cepa.or.ug
+            </p>
+        </div>
+    </div>
+</body>
+</html>

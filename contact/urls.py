@@ -1,7 +1,9 @@
-from rest_framework.routers import DefaultRouter
-from .views import ContactSubmissionViewSet
+from django.urls import path
+from . import views
 
-router = DefaultRouter()
-router.register(r'submissions', ContactSubmissionViewSet, basename='contact-submission')
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('contact/', views.contact_form, name='contact-form'),
+    path('newsletter/', views.newsletter_form, name='newsletter-form'),
+    path('contacts/', views.contact_list, name='contact-list'),
+    path('newsletters/', views.newsletter_list, name='newsletter-list'),
+]
