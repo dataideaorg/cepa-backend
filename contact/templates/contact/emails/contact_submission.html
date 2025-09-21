@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Form Submission - CEPA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1e40af, #f59e0b, #10b981, #ef4444);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            margin: -30px -30px 30px -30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .submission-info {
+            background-color: #f8fafc;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #1e40af;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+        .field-value {
+            color: #6b7280;
+            padding: 8px 12px;
+            background-color: white;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+        }
+        .message-content {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            white-space: pre-wrap;
+        }
+        .priority-high {
+            background-color: #fef2f2;
+            border-left-color: #ef4444;
+        }
+        .priority-urgent {
+            background-color: #fef2f2;
+            border-left-color: #dc2626;
+        }
+        .spam-warning {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .admin-actions {
+            background-color: #eff6ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        .admin-actions h3 {
+            margin: 0 0 10px 0;
+            color: #1e40af;
+        }
+        .admin-actions p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>New Contact Form Submission</h1>
+            <p>CEPA Website Contact Form</p>
+        </div>
+
+        {% if submission.is_spam %}
+        <div class="spam-warning">
+            <strong>⚠️ SPAM WARNING:</strong> This submission has been flagged as potential spam. Please review carefully.
+        </div>
+        {% endif %}
+
+        <div class="submission-info {% if submission.priority == 'high' %}priority-high{% elif submission.priority == 'urgent' %}priority-urgent{% endif %}">
+            <h2 style="margin-top: 0; color: #1e40af;">Submission Details</h2>
+            
+            <div class="field">
+                <div class="field-label">Name:</div>
+                <div class="field-value">{{ submission.name }}</div>
+            </div>
+            
+            <div class="field">
+                <div class="field-label">Email:</div>
+                <div class="field-value">{{ submission.email }}</div>
+            </div>
+            
+            {% if submission.phone %}
+            <div class="field">
+                <div class="field-label">Phone:</div>
+                <div class="field-value">{{ submission.phone }}</div>
+            </div>
+            {% endif %}
+            
+            {% if submission.organization %}
+            <div class="field">
+                <div class="field-label">Organization:</div>
+                <div class="field-value">{{ submission.organization }}</div>
+            </div>
+            {% endif %}
+            
+            <div class="field">
+                <div class="field-label">Subject:</div>
+                <div class="field-value">{{ submission.get_subject_display }}</div>
+            </div>
+            
+            <div class="field">
+                <div class="field-label">Priority:</div>
+                <div class="field-value">
+                    <span style="text-transform: uppercase; font-weight: bold; color: {% if submission.priority == 'urgent' %}#dc2626{% elif submission.priority == 'high' %}#ef4444{% elif submission.priority == 'medium' %}#f59e0b{% else %}#10b981{% endif %};">
+                        {{ submission.get_priority_display }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="field-label">Submitted:</div>
+                <div class="field-value">{{ submission.created_at|date:"F d, Y \a\t g:i A" }}</div>
+            </div>
+            
+            {% if submission.ip_address %}
+            <div class="field">
+                <div class="field-label">IP Address:</div>
+                <div class="field-value">{{ submission.ip_address }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="field">
+            <div class="field-label">Message:</div>
+            <div class="message-content">{{ submission.message }}</div>
+        </div>
+
+        <div class="admin-actions">
+            <h3>Admin Actions</h3>
+            <p><strong>Submission ID:</strong> {{ submission.id }}</p>
+            <p><strong>Status:</strong> {{ submission.get_status_display }}</p>
+            <p><strong>Admin Panel:</strong> <a href="{{ admin_url }}">View in Admin</a></p>
+            <p><strong>Response Time:</strong> {% if submission.response_time %}{{ submission.response_time|floatformat:1 }} hours{% else %}Not responded yet{% endif %}</p>
+        </div>
+
+        <div class="footer">
+            <p>This email was automatically generated by the CEPA website contact form.</p>
+            <p>Please do not reply directly to this email. Use the contact information provided above to respond to the inquiry.</p>
+        </div>
+    </div>
+</body>
+</html>

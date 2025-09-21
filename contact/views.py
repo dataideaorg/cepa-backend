@@ -3,7 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Q, Count
 from django.utils import timezone
+from django.conf import settings
 from datetime import timedelta
+import logging
 from .models import ContactSubmission
 from .serializers import (
     ContactSubmissionSerializer, 
@@ -11,6 +13,9 @@ from .serializers import (
     ContactSubmissionListSerializer,
     ContactSubmissionUpdateSerializer
 )
+from .services import ContactEmailService
+
+logger = logging.getLogger(__name__)
 
 class ContactSubmissionViewSet(viewsets.ModelViewSet):
     queryset = ContactSubmission.objects.all()
@@ -41,11 +46,24 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
         # Basic spam detection
         is_spam = self.detect_spam(serializer.validated_data)
         
-        serializer.save(
+        submission = serializer.save(
             ip_address=ip_address,
             user_agent=user_agent,
             is_spam=is_spam
         )
+        
+        # Send email notifications
+        try:
+            # Send notification to admin
+            ContactEmailService.send_contact_notification(submission)
+            
+            # Send auto-reply to user (only if not spam)
+            if not is_spam:
+                ContactEmailService.send_auto_reply(submission)
+                
+        except Exception as e:
+            logger.error(f"Failed to send emails for submission {submission.id}: {str(e)}")
+            # Don't fail the submission if email sending fails
     
     def get_client_ip(self):
         """Get client IP address"""
@@ -96,6 +114,19 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
                 user_agent=user_agent,
                 is_spam=is_spam
             )
+            
+            # Send email notifications
+            try:
+                # Send notification to admin
+                ContactEmailService.send_contact_notification(submission)
+                
+                # Send auto-reply to user (only if not spam)
+                if not is_spam:
+                    ContactEmailService.send_auto_reply(submission)
+                    
+            except Exception as e:
+                logger.error(f"Failed to send emails for submission {submission.id}: {str(e)}")
+                # Don't fail the submission if email sending fails
             
             return Response({
                 'success': True,

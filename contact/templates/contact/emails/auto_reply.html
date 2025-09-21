@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank you for contacting CEPA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1e40af, #f59e0b, #10b981, #ef4444);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            margin: -30px -30px 30px -30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .highlight-box {
+            background-color: #eff6ff;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 4px solid #1e40af;
+            margin: 20px 0;
+        }
+        .contact-info {
+            background-color: #f8fafc;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .contact-info h3 {
+            margin-top: 0;
+            color: #1e40af;
+        }
+        .contact-item {
+            margin-bottom: 10px;
+        }
+        .contact-item strong {
+            color: #374151;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .social-links {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 15px;
+            background-color: #1e40af;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .social-links a:hover {
+            background-color: #1e3a8a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Thank You for Contacting CEPA</h1>
+            <p>Center for Policy Analysis</p>
+        </div>
+
+        <div class="content">
+            <p>Dear {{ name }},</p>
+            
+            <p>Thank you for reaching out to the Center for Policy Analysis (CEPA). We have received your message regarding <strong>{{ submission.get_subject_display }}</strong> and appreciate you taking the time to contact us.</p>
+            
+            <div class="highlight-box">
+                <h3 style="margin-top: 0;">What happens next?</h3>
+                <ul>
+                    <li>Our team will review your inquiry within 24 hours</li>
+                    <li>We will respond to your message as soon as possible</li>
+                    <li>For urgent matters, we may contact you directly</li>
+                </ul>
+            </div>
+
+            <p>Your submission has been assigned the following details:</p>
+            <ul>
+                <li><strong>Subject:</strong> {{ submission.get_subject_display }}</li>
+                <li><strong>Priority:</strong> {{ submission.get_priority_display }}</li>
+                <li><strong>Reference ID:</strong> {{ submission.id }}</li>
+            </ul>
+
+            <div class="contact-info">
+                <h3>Need immediate assistance?</h3>
+                <div class="contact-item">
+                    <strong>Phone:</strong> +256 414 123 456
+                </div>
+                <div class="contact-item">
+                    <strong>Email:</strong> info@cepa.or.ug
+                </div>
+                <div class="contact-item">
+                    <strong>Address:</strong> Plot 17, Ntinda Complex, Ntinda, Kampala, Uganda
+                </div>
+                <div class="contact-item">
+                    <strong>Office Hours:</strong> Monday - Friday: 8:00 AM - 5:00 PM
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="https://www.cepa.or.ug">Visit Our Website</a>
+                <a href="https://www.cepa.or.ug/resources">View Our Resources</a>
+                <a href="https://www.cepa.or.ug/get-involved">Get Involved</a>
+            </div>
+
+            <p>We look forward to connecting with you and continuing our work in strengthening governance and democracy across East Africa.</p>
+            
+            <p>Best regards,<br>
+            <strong>The CEPA Team</strong></p>
+        </div>
+
+        <div class="footer">
+            <p>This is an automated response. Please do not reply to this email.</p>
+            <p>If you need to send additional information, please use our contact form or email us directly at info@cepa.or.ug</p>
+        </div>
+    </div>
+</body>
+</html>
