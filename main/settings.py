@@ -210,5 +210,5 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'jumashafara0@gmail.co
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # Contact form email settings
-CONTACT_EMAIL_RECIPIENTS = os.environ.get('CONTACT_EMAIL_RECIPIENTS', 'jumashafara@gmail.com').split(',')
+CONTACT_EMAIL_RECIPIENTS = os.environ.get('CONTACT_EMAIL_RECIPIENTS', 'jumashafara0@gmail.com').split(',')
 CONTACT_EMAIL_RECIPIENTS = [email.strip() for email in CONTACT_EMAIL_RECIPIENTS if email.strip()]

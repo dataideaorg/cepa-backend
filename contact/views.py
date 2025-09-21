@@ -6,9 +6,6 @@ from django.utils import timezone
 from django.conf import settings
 from datetime import timedelta
 import logging
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from .models import ContactSubmission
 from .serializers import (
     ContactSubmissionSerializer, 
@@ -16,6 +13,7 @@ from .serializers import (
     ContactSubmissionListSerializer,
     ContactSubmissionUpdateSerializer
 )
+from .services import ContactEmailService
 
 logger = logging.getLogger(__name__)
 
@@ -54,11 +52,18 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
             is_spam=is_spam
         )
         
-        # Email sending temporarily disabled for production debugging
-        print(f"Contact form submitted successfully: {submission.id} - {submission.name} - {submission.email}")
-        print(f"Email recipients configured: {settings.CONTACT_EMAIL_RECIPIENTS}")
-        print(f"Email host user: {settings.EMAIL_HOST_USER}")
-        print(f"Default from email: {settings.DEFAULT_FROM_EMAIL}")
+        # Send email notifications
+        try:
+            # Send notification to admin
+            ContactEmailService.send_contact_notification(submission)
+            
+            # Send auto-reply to user (only if not spam)
+            if not is_spam:
+                ContactEmailService.send_auto_reply(submission)
+                
+        except Exception as e:
+            logger.error(f"Failed to send emails for submission {submission.id}: {str(e)}")
+            # Don't fail the submission if email sending fails
     
     def get_client_ip(self):
         """Get client IP address"""
@@ -110,11 +115,18 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
                 is_spam=is_spam
             )
             
-            # Email sending temporarily disabled for production debugging
-            print(f"Contact form submitted successfully: {submission.id} - {submission.name} - {submission.email}")
-            print(f"Email recipients configured: {settings.CONTACT_EMAIL_RECIPIENTS}")
-            print(f"Email host user: {settings.EMAIL_HOST_USER}")
-            print(f"Default from email: {settings.DEFAULT_FROM_EMAIL}")
+            # Send email notifications
+            try:
+                # Send notification to admin
+                ContactEmailService.send_contact_notification(submission)
+                
+                # Send auto-reply to user (only if not spam)
+                if not is_spam:
+                    ContactEmailService.send_auto_reply(submission)
+                    
+            except Exception as e:
+                logger.error(f"Failed to send emails for submission {submission.id}: {str(e)}")
+                # Don't fail the submission if email sending fails
             
             return Response({
                 'success': True,
