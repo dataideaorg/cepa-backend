@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('resources/', include('resources.urls')),
     path('multimedia/', include('multimedia.urls')),
+    path('contact/', include('contact.urls')),
 ]
 
 # Serve media files
