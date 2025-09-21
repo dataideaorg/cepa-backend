@@ -191,4 +191,4 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     
 # Ensure media directory exists
-os.makedirs(MEDIA_ROOT, exist_ok=True)
+# os.makedirs(MEDIA_ROOT, exist_ok=True)

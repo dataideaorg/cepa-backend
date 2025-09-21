@@ -5,7 +5,7 @@ This API provides access to CEPA's resources including blog posts, news articles
 
 ## Base URL
 ```
-http://localhost:8000/api/
+http://localhost:8000/resources/
 ```
 
 ## Authentication
@@ -38,7 +38,7 @@ Currently, the API is open for read operations. Admin operations (POST, PUT, DEL
 
 #### Get All Blog Posts
 ```
-GET /api/blog/
+GET /resources/blog/
 ```
 **Query Parameters:**
 - `page`: Page number (default: 1)
@@ -50,27 +50,27 @@ GET /api/blog/
 
 **Example:**
 ```
-GET /api/blog/?category=Education&featured=true&search=policy
+GET /resources/blog/?category=Education&featured=true&search=policy
 ```
 
 #### Get Featured Blog Posts
 ```
-GET /api/blog/featured/
+GET /resources/blog/featured/
 ```
 
 #### Get Blog Post by Slug
 ```
-GET /api/blog/by_slug/{slug}/
+GET /resources/blog/by_slug/{slug}/
 ```
 
 #### Get Single Blog Post
 ```
-GET /api/blog/{id}/
+GET /resources/blog/{id}/
 ```
 
 #### Create Blog Post (Admin)
 ```
-POST /api/blog/
+POST /resources/blog/
 Content-Type: application/json
 
 {
@@ -88,49 +88,49 @@ Content-Type: application/json
 
 #### Update Blog Post (Admin)
 ```
-PUT /api/blog/{id}/
+PUT /resources/blog/{id}/
 ```
 
 #### Delete Blog Post (Admin)
 ```
-DELETE /api/blog/{id}/
+DELETE /resources/blog/{id}/
 ```
 
 ### News Articles
 
 #### Get All News Articles
 ```
-GET /api/news/
+GET /resources/news/
 ```
 **Query Parameters:** Same as blog posts
 
 #### Get Featured News Articles
 ```
-GET /api/news/featured/
+GET /resources/news/featured/
 ```
 
 #### Get News Article by Slug
 ```
-GET /api/news/by_slug/{slug}/
+GET /resources/news/by_slug/{slug}/
 ```
 
 #### Get Single News Article
 ```
-GET /api/news/{id}/
+GET /resources/news/{id}/
 ```
 
 #### Create/Update/Delete News Article (Admin)
 ```
-POST /api/news/
-PUT /api/news/{id}/
-DELETE /api/news/{id}/
+POST /resources/news/
+PUT /resources/news/{id}/
+DELETE /resources/news/{id}/
 ```
 
 ### Publications
 
 #### Get All Publications
 ```
-GET /api/publications/
+GET /resources/publications/
 ```
 **Query Parameters:**
 - `type`: Filter by publication type (Policy Brief, Policy Paper, Research Report, Analysis)
@@ -140,26 +140,26 @@ GET /api/publications/
 
 #### Get Featured Publications
 ```
-GET /api/publications/featured/
+GET /resources/publications/featured/
 ```
 
 #### Get Single Publication
 ```
-GET /api/publications/{id}/
+GET /resources/publications/{id}/
 ```
 
 #### Create/Update/Delete Publication (Admin)
 ```
-POST /api/publications/
-PUT /api/publications/{id}/
-DELETE /api/publications/{id}/
+POST /resources/publications/
+PUT /resources/publications/{id}/
+DELETE /resources/publications/{id}/
 ```
 
 ### Events
 
 #### Get All Events
 ```
-GET /api/events/
+GET /resources/events/
 ```
 **Query Parameters:**
 - `category`: Filter by category (Conference, Meeting, Workshop, Seminar, Training, Validation Meeting)
@@ -169,41 +169,41 @@ GET /api/events/
 
 #### Get Featured Events
 ```
-GET /api/events/featured/
+GET /resources/events/featured/
 ```
 
 #### Get Upcoming Events
 ```
-GET /api/events/upcoming/
+GET /resources/events/upcoming/
 ```
 
 #### Get Past Events
 ```
-GET /api/events/past/
+GET /resources/events/past/
 ```
 
 #### Get Event by Slug
 ```
-GET /api/events/by_slug/{slug}/
+GET /resources/events/by_slug/{slug}/
 ```
 
 #### Get Single Event
 ```
-GET /api/events/{id}/
+GET /resources/events/{id}/
 ```
 
 #### Create/Update/Delete Event (Admin)
 ```
-POST /api/events/
-PUT /api/events/{id}/
-DELETE /api/events/{id}/
+POST /resources/events/
+PUT /resources/events/{id}/
+DELETE /resources/events/{id}/
 ```
 
 ### Homepage
 
 #### Get Latest Updates
 ```
-GET /api/homepage/latest/
+GET /resources/homepage/latest/
 ```
 
 Returns featured items from all resource types:
@@ -315,22 +315,22 @@ Returns featured items from all resource types:
 
 ### Get all featured blog posts
 ```bash
-curl http://localhost:8000/api/blog/featured/
+curl http://localhost:8000/resources/blog/featured/
 ```
 
 ### Search for road safety content
 ```bash
-curl "http://localhost:8000/api/blog/?search=road%20safety"
+curl "http://localhost:8000/resources/blog/?search=road%20safety"
 ```
 
 ### Get upcoming events
 ```bash
-curl http://localhost:8000/api/events/upcoming/
+curl http://localhost:8000/resources/events/upcoming/
 ```
 
 ### Get homepage latest updates
 ```bash
-curl http://localhost:8000/api/homepage/latest/
+curl http://localhost:8000/resources/homepage/latest/
 ```
 
 ## Database Status
