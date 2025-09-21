@@ -54,73 +54,8 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
             is_spam=is_spam
         )
         
-        # Send email notifications (temporarily disabled for debugging)
-        try:
-            # Check if email settings are properly configured
-            if not settings.CONTACT_EMAIL_RECIPIENTS:
-                print("Warning: CONTACT_EMAIL_RECIPIENTS not configured, skipping email sending")
-            else:
-                # Create simple email content without templates
-                admin_subject = f"New Contact Form Submission: {submission.get_subject_display()}"
-                if submission.is_spam:
-                    admin_subject = f"[SPAM] {admin_subject}"
-                
-                admin_message = f"""
-New contact form submission received:
-
-Name: {submission.name}
-Email: {submission.email}
-Phone: {submission.phone or 'Not provided'}
-Organization: {submission.organization or 'Not provided'}
-Subject: {submission.get_subject_display()}
-Priority: {submission.get_priority_display()}
-Spam Status: {'Yes' if submission.is_spam else 'No'}
-
-Message:
-{submission.message}
-
-Submitted at: {submission.created_at}
-IP Address: {submission.ip_address}
-                """.strip()
-                
-                # Send email to admin
-                send_mail(
-                    admin_subject,
-                    admin_message,
-                    settings.DEFAULT_FROM_EMAIL,
-                    settings.CONTACT_EMAIL_RECIPIENTS,
-                    fail_silently=True  # Changed to fail_silently=True for debugging
-                )
-                
-                # Send confirmation email to user (only if not spam)
-                if not is_spam:
-                    user_subject = f"Thank you for contacting CEPA - {submission.get_subject_display()}"
-                    user_message = f"""
-Dear {submission.name},
-
-Thank you for contacting CEPA. We have received your message regarding "{submission.get_subject_display()}" and will get back to you within 24 hours.
-
-Your submission details:
-- Subject: {submission.get_subject_display()}
-- Submitted: {submission.created_at}
-
-If you have any urgent inquiries, please contact us directly at info@cepa.or.ug or call +256 414 123 456.
-
-Best regards,
-CEPA Team
-                    """.strip()
-                    
-                    send_mail(
-                        user_subject,
-                        user_message,
-                        settings.DEFAULT_FROM_EMAIL,
-                        [submission.email],
-                        fail_silently=True  # Changed to fail_silently=True for debugging
-                    )
-                
-        except Exception as e:
-            print(f"Error sending email: {e}")
-            # Still return success even if email fails
+        # Email sending temporarily disabled for debugging
+        print(f"Contact form submitted: {submission.id} - {submission.name} - {submission.email}")
     
     def get_client_ip(self):
         """Get client IP address"""
@@ -172,73 +107,8 @@ CEPA Team
                 is_spam=is_spam
             )
             
-            # Send email notifications (temporarily disabled for debugging)
-            try:
-                # Check if email settings are properly configured
-                if not settings.CONTACT_EMAIL_RECIPIENTS:
-                    print("Warning: CONTACT_EMAIL_RECIPIENTS not configured, skipping email sending")
-                else:
-                    # Create simple email content without templates
-                    admin_subject = f"New Contact Form Submission: {submission.get_subject_display()}"
-                    if submission.is_spam:
-                        admin_subject = f"[SPAM] {admin_subject}"
-                    
-                    admin_message = f"""
-New contact form submission received:
-
-Name: {submission.name}
-Email: {submission.email}
-Phone: {submission.phone or 'Not provided'}
-Organization: {submission.organization or 'Not provided'}
-Subject: {submission.get_subject_display()}
-Priority: {submission.get_priority_display()}
-Spam Status: {'Yes' if submission.is_spam else 'No'}
-
-Message:
-{submission.message}
-
-Submitted at: {submission.created_at}
-IP Address: {submission.ip_address}
-                    """.strip()
-                    
-                    # Send email to admin
-                    send_mail(
-                        admin_subject,
-                        admin_message,
-                        settings.DEFAULT_FROM_EMAIL,
-                        settings.CONTACT_EMAIL_RECIPIENTS,
-                        fail_silently=True  # Changed to fail_silently=True for debugging
-                    )
-                    
-                    # Send confirmation email to user (only if not spam)
-                    if not is_spam:
-                        user_subject = f"Thank you for contacting CEPA - {submission.get_subject_display()}"
-                        user_message = f"""
-Dear {submission.name},
-
-Thank you for contacting CEPA. We have received your message regarding "{submission.get_subject_display()}" and will get back to you within 24 hours.
-
-Your submission details:
-- Subject: {submission.get_subject_display()}
-- Submitted: {submission.created_at}
-
-If you have any urgent inquiries, please contact us directly at info@cepa.or.ug or call +256 414 123 456.
-
-Best regards,
-CEPA Team
-                        """.strip()
-                        
-                        send_mail(
-                            user_subject,
-                            user_message,
-                            settings.DEFAULT_FROM_EMAIL,
-                            [submission.email],
-                            fail_silently=True  # Changed to fail_silently=True for debugging
-                        )
-                    
-            except Exception as e:
-                print(f"Error sending email: {e}")
-                # Still return success even if email fails
+            # Email sending temporarily disabled for debugging
+            print(f"Contact form submitted: {submission.id} - {submission.name} - {submission.email}")
             
             return Response({
                 'success': True,
