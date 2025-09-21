@@ -6,6 +6,9 @@ from django.utils import timezone
 from django.conf import settings
 from datetime import timedelta
 import logging
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from .models import ContactSubmission
 from .serializers import (
     ContactSubmissionSerializer, 
@@ -13,7 +16,6 @@ from .serializers import (
     ContactSubmissionListSerializer,
     ContactSubmissionUpdateSerializer
 )
-from .services import ContactEmailService
 
 logger = logging.getLogger(__name__)
 
@@ -54,12 +56,41 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
         
         # Send email notifications
         try:
-            # Send notification to admin
-            ContactEmailService.send_contact_notification(submission)
+            # Prepare context for email templates
+            context = {
+                'name': submission.name,
+                'email': submission.email,
+                'phone': submission.phone,
+                'organization': submission.organization,
+                'subject': submission.subject,
+                'message': submission.message,
+                'inquiry_type': submission.get_subject_display()
+            }
             
-            # Send auto-reply to user (only if not spam)
+            # Send email to admin (only if not spam)
             if not is_spam:
-                ContactEmailService.send_auto_reply(submission)
+                admin_html = render_to_string('emails/admin_notification.html', context)
+                admin_text = strip_tags(admin_html)
+                admin_email = EmailMultiAlternatives(
+                    f"New Contact Form Submission: {submission.subject}",
+                    admin_text,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [settings.CONTACT_EMAIL, 'jumashafara0@gmail.com']
+                )
+                admin_email.attach_alternative(admin_html, "text/html")
+                admin_email.send()
+                
+                # Send confirmation email to user
+                user_html = render_to_string('emails/contact_confirmation.html', context)
+                user_text = strip_tags(user_html)
+                user_email = EmailMultiAlternatives(
+                    "Thank you for contacting CEPA",
+                    user_text,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [submission.email]
+                )
+                user_email.attach_alternative(user_html, "text/html")
+                user_email.send()
                 
         except Exception as e:
             logger.error(f"Failed to send emails for submission {submission.id}: {str(e)}")
@@ -117,12 +148,41 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
             
             # Send email notifications
             try:
-                # Send notification to admin
-                ContactEmailService.send_contact_notification(submission)
+                # Prepare context for email templates
+                context = {
+                    'name': submission.name,
+                    'email': submission.email,
+                    'phone': submission.phone,
+                    'organization': submission.organization,
+                    'subject': submission.subject,
+                    'message': submission.message,
+                    'inquiry_type': submission.get_subject_display()
+                }
                 
-                # Send auto-reply to user (only if not spam)
+                # Send email to admin (only if not spam)
                 if not is_spam:
-                    ContactEmailService.send_auto_reply(submission)
+                    admin_html = render_to_string('emails/admin_notification.html', context)
+                    admin_text = strip_tags(admin_html)
+                    admin_email = EmailMultiAlternatives(
+                        f"New Contact Form Submission: {submission.subject}",
+                        admin_text,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [settings.CONTACT_EMAIL, 'jumashafara0@gmail.com']
+                    )
+                    admin_email.attach_alternative(admin_html, "text/html")
+                    admin_email.send()
+                    
+                    # Send confirmation email to user
+                    user_html = render_to_string('emails/contact_confirmation.html', context)
+                    user_text = strip_tags(user_html)
+                    user_email = EmailMultiAlternatives(
+                        "Thank you for contacting CEPA",
+                        user_text,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [submission.email]
+                    )
+                    user_email.attach_alternative(user_html, "text/html")
+                    user_email.send()
                     
             except Exception as e:
                 logger.error(f"Failed to send emails for submission {submission.id}: {str(e)}")
