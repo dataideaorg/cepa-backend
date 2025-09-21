@@ -22,6 +22,7 @@ ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
     "https://cepa-backend-production.up.railway.app",
+    "https://master.d1o07tzlhd1qin.amplifyapp.com",
     "https://cepa.or.ug",
     "https://www.cepa.or.ug",
     "https://cepa.or.ug",
@@ -168,6 +169,10 @@ if DEBUG:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "https://cepa-backend-production.up.railway.app",
+        "https://master.d1o07tzlhd1qin.amplifyapp.com",
+        "https://www.cepa.or.ug",
+        "https://cepa.or.ug",
     ]
 else:
     # Production CORS settings - add your frontend domains
