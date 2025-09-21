@@ -56,43 +56,63 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
         
         # Send email notifications
         try:
-            # Prepare context for email templates
-            context = {
-                'name': submission.name,
-                'email': submission.email,
-                'phone': submission.phone,
-                'organization': submission.organization,
-                'subject': submission.subject,
-                'message': submission.message,
-                'inquiry_type': submission.get_subject_display(),
-                'priority': submission.get_priority_display(),
-                'is_spam': submission.is_spam
-            }
+            # Create simple email content without templates
+            admin_subject = f"New Contact Form Submission: {submission.get_subject_display()}"
+            if submission.is_spam:
+                admin_subject = f"[SPAM] {admin_subject}"
+            
+            admin_message = f"""
+New contact form submission received:
+
+Name: {submission.name}
+Email: {submission.email}
+Phone: {submission.phone or 'Not provided'}
+Organization: {submission.organization or 'Not provided'}
+Subject: {submission.get_subject_display()}
+Priority: {submission.get_priority_display()}
+Spam Status: {'Yes' if submission.is_spam else 'No'}
+
+Message:
+{submission.message}
+
+Submitted at: {submission.created_at}
+IP Address: {submission.ip_address}
+            """.strip()
             
             # Send email to admin
-            admin_html = render_to_string('contact/emails/contact_submission.html', context)
-            admin_text = strip_tags(admin_html)
-            admin_email = EmailMultiAlternatives(
-                f"New Contact Form Submission: {submission.subject}",
-                admin_text,
+            send_mail(
+                admin_subject,
+                admin_message,
                 settings.DEFAULT_FROM_EMAIL,
-                settings.CONTACT_EMAIL_RECIPIENTS
+                settings.CONTACT_EMAIL_RECIPIENTS,
+                fail_silently=False
             )
-            admin_email.attach_alternative(admin_html, "text/html")
-            admin_email.send()
             
             # Send confirmation email to user (only if not spam)
             if not is_spam:
-                user_html = render_to_string('contact/emails/auto_reply.html', context)
-                user_text = strip_tags(user_html)
-                user_email = EmailMultiAlternatives(
-                    "Thank you for contacting CEPA",
-                    user_text,
+                user_subject = f"Thank you for contacting CEPA - {submission.get_subject_display()}"
+                user_message = f"""
+Dear {submission.name},
+
+Thank you for contacting CEPA. We have received your message regarding "{submission.get_subject_display()}" and will get back to you within 24 hours.
+
+Your submission details:
+- Subject: {submission.get_subject_display()}
+- Submitted: {submission.created_at}
+
+If you have any urgent inquiries, please contact us directly at info@cepa.or.ug or call +256 414 123 456.
+
+Best regards,
+CEPA Team
+                """.strip()
+                
+                send_mail(
+                    user_subject,
+                    user_message,
                     settings.DEFAULT_FROM_EMAIL,
-                    [submission.email]
+                    [submission.email],
+                    fail_silently=False
                 )
-                user_email.attach_alternative(user_html, "text/html")
-                user_email.send()
                 
         except Exception as e:
             print(f"Error sending email: {e}")
@@ -150,43 +170,63 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
             
             # Send email notifications
             try:
-                # Prepare context for email templates
-                context = {
-                    'name': submission.name,
-                    'email': submission.email,
-                    'phone': submission.phone,
-                    'organization': submission.organization,
-                    'subject': submission.subject,
-                    'message': submission.message,
-                    'inquiry_type': submission.get_subject_display(),
-                    'priority': submission.get_priority_display(),
-                    'is_spam': submission.is_spam
-                }
+                # Create simple email content without templates
+                admin_subject = f"New Contact Form Submission: {submission.get_subject_display()}"
+                if submission.is_spam:
+                    admin_subject = f"[SPAM] {admin_subject}"
+                
+                admin_message = f"""
+New contact form submission received:
+
+Name: {submission.name}
+Email: {submission.email}
+Phone: {submission.phone or 'Not provided'}
+Organization: {submission.organization or 'Not provided'}
+Subject: {submission.get_subject_display()}
+Priority: {submission.get_priority_display()}
+Spam Status: {'Yes' if submission.is_spam else 'No'}
+
+Message:
+{submission.message}
+
+Submitted at: {submission.created_at}
+IP Address: {submission.ip_address}
+                """.strip()
                 
                 # Send email to admin
-                admin_html = render_to_string('contact/emails/contact_submission.html', context)
-                admin_text = strip_tags(admin_html)
-                admin_email = EmailMultiAlternatives(
-                    f"New Contact Form Submission: {submission.subject}",
-                    admin_text,
+                send_mail(
+                    admin_subject,
+                    admin_message,
                     settings.DEFAULT_FROM_EMAIL,
-                    settings.CONTACT_EMAIL_RECIPIENTS
+                    settings.CONTACT_EMAIL_RECIPIENTS,
+                    fail_silently=False
                 )
-                admin_email.attach_alternative(admin_html, "text/html")
-                admin_email.send()
                 
                 # Send confirmation email to user (only if not spam)
                 if not is_spam:
-                    user_html = render_to_string('contact/emails/auto_reply.html', context)
-                    user_text = strip_tags(user_html)
-                    user_email = EmailMultiAlternatives(
-                        "Thank you for contacting CEPA",
-                        user_text,
+                    user_subject = f"Thank you for contacting CEPA - {submission.get_subject_display()}"
+                    user_message = f"""
+Dear {submission.name},
+
+Thank you for contacting CEPA. We have received your message regarding "{submission.get_subject_display()}" and will get back to you within 24 hours.
+
+Your submission details:
+- Subject: {submission.get_subject_display()}
+- Submitted: {submission.created_at}
+
+If you have any urgent inquiries, please contact us directly at info@cepa.or.ug or call +256 414 123 456.
+
+Best regards,
+CEPA Team
+                    """.strip()
+                    
+                    send_mail(
+                        user_subject,
+                        user_message,
                         settings.DEFAULT_FROM_EMAIL,
-                        [submission.email]
+                        [submission.email],
+                        fail_silently=False
                     )
-                    user_email.attach_alternative(user_html, "text/html")
-                    user_email.send()
                     
             except Exception as e:
                 print(f"Error sending email: {e}")
