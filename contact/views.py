@@ -79,7 +79,7 @@ class ContactSubmissionViewSet(viewsets.ModelViewSet):
         
         return False
     
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
     def submit(self, request):
         """Public endpoint for submitting contact forms"""
         serializer = ContactSubmissionCreateSerializer(data=request.data)
