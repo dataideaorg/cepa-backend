@@ -8,10 +8,6 @@ class Contact(models.Model):
         ('fellowships', 'Fellowship Programs'),
         ('membership', 'Membership'),
         ('announcements', 'Announcements'),
-        ('training', 'Training Programs'),
-        ('consultancy', 'Consultancy Services'),
-        ('partnership', 'Partnership Opportunities'),
-        ('other', 'Other'),
     ]
     
     id = models.AutoField(primary_key=True)
