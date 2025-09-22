@@ -15,3 +15,9 @@ class NewsletterAdmin(admin.ModelAdmin):
     search_fields = ('email',)
     readonly_fields = ('created_at',)
     ordering = ('-created_at',)
+
+# customize admin panel 
+admin.site.site_header = "CEPA Admin Panel"
+admin.site.site_title = "CEPA Admin Panel"
+admin.site.index_title = "Welcome to CEPA Admin Panel"
+
