@@ -175,23 +175,44 @@ REST_FRAMEWORK = {
 }
 
 # CORS settings
-if DEBUG:
-    # Development CORS settings
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://cepa-backend-production.up.railway.app",
-        "https://master.d1o07tzlhd1qin.amplifyapp.com",
-        "https://www.cepa.or.ug",
-        "https://cepa.or.ug",
-    ]
-else:
-    # Production CORS settings - add your frontend domains
-    CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
-    # Remove empty strings from the list
-    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ALLOWED_ORIGINS if origin.strip()]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://cepa-backend-production.up.railway.app",
+    "https://master.d1o07tzlhd1qin.amplifyapp.com",
+    "https://www.cepa.or.ug",
+    "https://cepa.or.ug",
+]
+
+# Also allow CORS from environment variables if set
+env_cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '')
+if env_cors_origins:
+    additional_origins = [origin.strip() for origin in env_cors_origins.split(',') if origin.strip()]
+    CORS_ALLOWED_ORIGINS.extend(additional_origins)
 
 CORS_ALLOW_CREDENTIALS = True
+
+# Additional CORS settings for better compatibility
+CORS_ALLOW_ALL_ORIGINS = False  # Keep this False for security
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 
 # Media files configuration
 MEDIA_URL = '/media/'
