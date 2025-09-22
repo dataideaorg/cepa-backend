@@ -175,25 +175,10 @@ REST_FRAMEWORK = {
 }
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://cepa-backend-production.up.railway.app",
-    "https://master.d1o07tzlhd1qin.amplifyapp.com",
-    "https://www.cepa.or.ug",
-    "https://cepa.or.ug",
-]
-
-# Also allow CORS from environment variables if set
-env_cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '')
-if env_cors_origins:
-    additional_origins = [origin.strip() for origin in env_cors_origins.split(',') if origin.strip()]
-    CORS_ALLOWED_ORIGINS.extend(additional_origins)
-
 CORS_ALLOW_CREDENTIALS = True
 
 # Additional CORS settings for better compatibility
-CORS_ALLOW_ALL_ORIGINS = False  # Keep this False for security
+CORS_ALLOW_ALL_ORIGINS = True  # Keep this False for security
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
