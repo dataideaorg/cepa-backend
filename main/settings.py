@@ -146,9 +146,10 @@ EMAIL_HOST = 'smtp.gmail.com'  # Or your email provider's SMTP server
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'jumashafara0@gmail.com'  # Your email address
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Your email password or app password
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')  # Your email password or app password
 DEFAULT_FROM_EMAIL = 'jumashafara0@gmail.com'
-CONTACT_EMAIL = 'jumashafara0@gmail.com' 
+CONTACT_EMAIL = 'jumashafara0@gmail.com'
+EMAIL_TIMEOUT = 10  # 10 second timeout for email sending 
 
 # Static files collection directory for production
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

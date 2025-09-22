@@ -26,6 +26,7 @@ def contact_form(request):
             'inquiry_type': contact.get_inquiry_type_display()
         }
         
+        # Try to send emails, but don't let email failures block the response
         try:
             # Send email to admin
             admin_subject = f"New Contact Form Submission: {contact.subject}"
@@ -51,8 +52,12 @@ Submitted at: {contact.created_at}
                 settings.DEFAULT_FROM_EMAIL,
                 [getattr(settings, 'CONTACT_EMAIL', 'info@cepa.or.ug'), 'jumashafara0@gmail.com']
             )
-            admin_email.send()
+            admin_email.send(fail_silently=True)
             
+        except Exception as e:
+            print(f"Error sending admin email: {e}")
+        
+        try:
             # Send confirmation email to user
             user_subject = "Thank you for contacting CEPA"
             user_message = f"""
@@ -76,12 +81,10 @@ CEPA Team
                 settings.DEFAULT_FROM_EMAIL,
                 [contact.email]
             )
-            user_email.send()
+            user_email.send(fail_silently=True)
             
         except Exception as e:
-            print(f"Error sending email: {e}")
-            # Still return success even if email fails
-            return Response({'message': 'Contact form submitted successfully'}, status=status.HTTP_201_CREATED)
+            print(f"Error sending user email: {e}")
         
         return Response({'message': 'Contact form submitted successfully'}, status=status.HTTP_201_CREATED)
     
@@ -119,7 +122,7 @@ CEPA Team
                 settings.DEFAULT_FROM_EMAIL,
                 [newsletter.email]
             )
-            email.send()
+            email.send(fail_silently=True)
             
         except Exception as e:
             print(f"Error sending newsletter confirmation: {e}")
