@@ -3,6 +3,11 @@ from django.db import models
 class Contact(models.Model):
     INQUIRY_CHOICES = [
         ('general', 'General Inquiry'),
+        ('donate', 'Donation Inquiry'),
+        ('career', 'Career Opportunities'),
+        ('fellowships', 'Fellowship Programs'),
+        ('membership', 'Membership'),
+        ('announcements', 'Announcements'),
         ('training', 'Training Programs'),
         ('consultancy', 'Consultancy Services'),
         ('partnership', 'Partnership Opportunities'),
