@@ -17,55 +17,73 @@ def contact_form(request):
         
         # Prepare context for email templates
         context = {
-            'name': contact.full_name,
-            'first_name': contact.first_name,
-            'last_name': contact.last_name,
+            'name': contact.name,
             'email': contact.email,
-            'phone': contact.phone or 'Not provided',
-            'organization': contact.organization or 'Not provided',
+            'phone': contact.phone,
+            'organization': contact.organization,
             'subject': contact.subject,
             'message': contact.message,
-            'inquiry_type': contact.get_inquiry_type_display(),
-            'created_at': contact.created_at,
+            'inquiry_type': contact.get_inquiry_type_display()
         }
         
         try:
             # Send email to admin
-            admin_html = render_to_string('contact/emails/admin_notification.html', context)
-            admin_text = strip_tags(admin_html)
+            admin_subject = f"New Contact Form Submission: {contact.subject}"
+            admin_message = f"""
+New contact form submission received:
+
+Name: {contact.name}
+Email: {contact.email}
+Phone: {contact.phone or 'Not provided'}
+Organization: {contact.organization or 'Not provided'}
+Inquiry Type: {contact.get_inquiry_type_display()}
+Subject: {contact.subject}
+
+Message:
+{contact.message}
+
+Submitted at: {contact.created_at}
+            """
+            
             admin_email = EmailMultiAlternatives(
-                f"New Contact Form Submission: {contact.subject}",
-                admin_text,
+                admin_subject,
+                admin_message,
                 settings.DEFAULT_FROM_EMAIL,
                 [getattr(settings, 'CONTACT_EMAIL', 'info@cepa.or.ug'), 'jumashafara0@gmail.com']
             )
-            admin_email.attach_alternative(admin_html, "text/html")
             admin_email.send()
             
             # Send confirmation email to user
-            user_html = render_to_string('contact/emails/contact_confirmation.html', context)
-            user_text = strip_tags(user_html)
+            user_subject = "Thank you for contacting CEPA"
+            user_message = f"""
+Dear {contact.name},
+
+Thank you for contacting the Center for Policy Analysis (CEPA). We have received your message and will get back to you as soon as possible.
+
+Your inquiry details:
+Subject: {contact.subject}
+Inquiry Type: {contact.get_inquiry_type_display()}
+
+We appreciate your interest in our work and look forward to engaging with you.
+
+Best regards,
+CEPA Team
+            """
+            
             user_email = EmailMultiAlternatives(
-                "Thank you for contacting CEPA",
-                user_text,
+                user_subject,
+                user_message,
                 settings.DEFAULT_FROM_EMAIL,
                 [contact.email]
             )
-            user_email.attach_alternative(user_html, "text/html")
             user_email.send()
             
         except Exception as e:
             print(f"Error sending email: {e}")
             # Still return success even if email fails
-            return Response({
-                'message': 'Contact form submitted successfully',
-                'id': contact.id
-            }, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Contact form submitted successfully'}, status=status.HTTP_201_CREATED)
         
-        return Response({
-            'message': 'Contact form submitted successfully',
-            'id': contact.id
-        }, status=status.HTTP_201_CREATED)
+        return Response({'message': 'Contact form submitted successfully'}, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -76,47 +94,36 @@ def newsletter_form(request):
         newsletter = serializer.save()
         
         try:
-            # Prepare context for email template
-            context = {
-                'name': f"{newsletter.first_name} {newsletter.last_name}".strip() or 'Subscriber',
-                'email': newsletter.email,
-                'first_name': newsletter.first_name or 'Subscriber',
-            }
-            
             # Send confirmation email to newsletter subscriber
-            html_content = render_to_string('contact/emails/newsletter_confirmation.html', context)
-            text_content = strip_tags(html_content)
+            subject = "Welcome to CEPA Newsletter"
+            message = f"""
+Dear Subscriber,
+
+Thank you for subscribing to the Center for Policy Analysis (CEPA) newsletter!
+
+You will now receive regular updates about:
+- Our latest research and policy analysis
+- Upcoming events and workshops
+- Publications and reports
+- Governance and democracy initiatives
+
+We appreciate your interest in our work and look forward to keeping you informed about our activities.
+
+Best regards,
+CEPA Team
+            """
+            
             email = EmailMultiAlternatives(
-                "Welcome to CEPA Newsletter",
-                text_content,
+                subject,
+                message,
                 settings.DEFAULT_FROM_EMAIL,
                 [newsletter.email]
             )
-            email.attach_alternative(html_content, "text/html")
             email.send()
             
         except Exception as e:
             print(f"Error sending newsletter confirmation: {e}")
         
-        return Response({
-            'message': 'Newsletter subscription successful',
-            'id': newsletter.id
-        }, status=status.HTTP_201_CREATED)
+        return Response({'message': 'Newsletter subscription successful'}, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET'])
-def contact_list(request):
-    """List all contact submissions (for admin use)"""
-    from .models import Contact
-    contacts = Contact.objects.all()
-    serializer = ContactSerializer(contacts, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def newsletter_list(request):
-    """List all newsletter subscriptions (for admin use)"""
-    from .models import Newsletter
-    newsletters = Newsletter.objects.filter(is_active=True)
-    serializer = NewsletterSerializer(newsletters, many=True)
-    return Response(serializer.data)

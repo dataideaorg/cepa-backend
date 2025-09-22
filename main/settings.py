@@ -140,6 +140,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Or your email provider's SMTP server
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'jumashafara0@gmail.com'  # Your email address
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Your email password or app password
+DEFAULT_FROM_EMAIL = 'jumashafara0@gmail.com'
+CONTACT_EMAIL = 'jumashafara0@gmail.com' 
+
 # Static files collection directory for production
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -198,16 +208,3 @@ else:
     
 # Ensure media directory exists
 # os.makedirs(MEDIA_ROOT, exist_ok=True)
-
-# Email settings
-# Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Or your email provider's SMTP server
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'jumashafara0@gmail.com'  # Your email address
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')  # Your email password or app password
-DEFAULT_FROM_EMAIL = 'jumashafara0@gmail.com'
-CONTACT_EMAIL = 'jumashafara0@gmail.com'  
-
-print(EMAIL_HOST_PASSWORD)
