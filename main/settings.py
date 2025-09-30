@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'resources',
     'multimedia',
     'contact',
+    'getinvolved',
 ]
 
 MIDDLEWARE = [
