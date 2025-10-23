@@ -9,6 +9,7 @@ urlpatterns = [
     path('multimedia/', include('multimedia.urls')),
     path('contact/', include('contact.urls')),
     path('getinvolved/', include('getinvolved.urls')),
+    path('fellowships/', include('fellowships.urls')),
 ]
 
 # Serve media files

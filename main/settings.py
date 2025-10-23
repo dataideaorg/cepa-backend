@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'multimedia',
     'contact',
     'getinvolved',
+    'fellowships',
 ]
 
 MIDDLEWARE = [
