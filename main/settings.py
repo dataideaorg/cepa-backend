@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'contact',
     'getinvolved',
     'fellowships',
+    'focusareas',
 ]
 
 MIDDLEWARE = [

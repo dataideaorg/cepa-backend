@@ -10,6 +10,7 @@ urlpatterns = [
     path('contact/', include('contact.urls')),
     path('getinvolved/', include('getinvolved.urls')),
     path('fellowships/', include('fellowships.urls')),
+    path('focus-area/', include('focusareas.urls')),
 ]
 
 # Serve media files
