@@ -1,8 +1,19 @@
 from django.contrib import admin
+from django import forms
 from .models import (
     FocusArea, FocusAreaObjective, FocusAreaActivity,
     FocusAreaOutcome, FocusAreaPartner, FocusAreaMilestone
 )
+
+
+class FocusAreaAdminForm(forms.ModelForm):
+    """Custom form for FocusArea to ensure proper file upload handling"""
+    class Meta:
+        model = FocusArea
+        fields = '__all__'
+        widgets = {
+            'image': forms.FileInput(attrs={'accept': 'image/*'}),
+        }
 
 
 class FocusAreaObjectiveInline(admin.TabularInline):
@@ -37,16 +48,25 @@ class FocusAreaMilestoneInline(admin.TabularInline):
 
 @admin.register(FocusArea)
 class FocusAreaAdmin(admin.ModelAdmin):
+    form = FocusAreaAdminForm
     list_display = ['title', 'slug', 'status', 'start_date', 'order', 'created_at']
     list_filter = ['status', 'created_at']
     search_fields = ['title', 'description', 'overview_summary']
     list_editable = ['order', 'status']
-    readonly_fields = ['created_at', 'updated_at']
+    readonly_fields = ['created_at', 'updated_at', 'image_preview']
     prepopulated_fields = {'slug': ('title',)}
+
+    def image_preview(self, obj):
+        """Display image preview in admin"""
+        if obj.image:
+            from django.utils.html import format_html
+            return format_html('<img src="{}" style="max-height: 200px; max-width: 300px;" />', obj.image.url)
+        return "No image uploaded"
+    image_preview.short_description = 'Current Image'
 
     fieldsets = (
         ('Basic Information', {
-            'fields': ('title', 'slug', 'description', 'image', 'order')
+            'fields': ('title', 'slug', 'description', 'image', 'image_preview', 'order')
         }),
         ('Overview', {
             'fields': ('overview_summary',)

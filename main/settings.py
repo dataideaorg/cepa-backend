@@ -175,6 +175,8 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FormParser',
     ],
 }
 
@@ -217,4 +219,7 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     
 # Ensure media directory exists
-# os.makedirs(MEDIA_ROOT, exist_ok=True)
+os.makedirs(MEDIA_ROOT, exist_ok=True)
+
+# Create focus areas image directory
+os.makedirs(os.path.join(MEDIA_ROOT, 'focus_areas', 'images'), exist_ok=True)
