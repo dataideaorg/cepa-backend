@@ -10,7 +10,7 @@ def generate_uuid():
 
 def upload_to_focus_area_images(instance, filename):
     """Upload path for focus area images"""
-    return f'focus_areas/images/{instance.id}/{filename}'
+    return f'focus_areas/images/{filename}'
 
 
 class FocusArea(models.Model):
