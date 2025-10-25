@@ -12,7 +12,7 @@ class FocusAreaAdminForm(forms.ModelForm):
         model = FocusArea
         fields = '__all__'
         widgets = {
-            'image': forms.FileInput(attrs={'accept': 'image/*'}),
+            'image': forms.ClearableFileInput(attrs={'accept': 'image/*'}),
         }
 
 
