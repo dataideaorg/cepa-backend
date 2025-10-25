@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 import uuid
+import os
 
 
 def generate_uuid():
@@ -9,8 +10,8 @@ def generate_uuid():
 
 
 def upload_to_focus_area_images(instance, filename):
-    """Upload path for focus area images"""
-    return f'focus_areas/images/{filename}'
+    """Generate upload path for focus area images"""
+    return os.path.join('focus_areas', 'images', filename)
 
 
 class FocusArea(models.Model):
