@@ -1,16 +1,15 @@
 from django.db import models
 from django.utils import timezone
 import uuid
-import os
 
 
 def generate_uuid():
-    """Generate a unique UUID string for model primary keys"""
+    """Generate a unique UUID string"""
     return str(uuid.uuid4())
 
 
 def upload_to_focus_area_images(instance, filename):
-    """Generate upload path for focus area images"""
+    """Upload path for focus area images"""
     return f'focus_areas/images/{instance.id}/{filename}'
 
 

@@ -220,6 +220,3 @@ else:
     
 # Ensure media directory exists
 os.makedirs(MEDIA_ROOT, exist_ok=True)
-
-# Create focus areas image directory
-os.makedirs(os.path.join(MEDIA_ROOT, 'focus_areas', 'images'), exist_ok=True)

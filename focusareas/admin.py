@@ -1,19 +1,8 @@
 from django.contrib import admin
-from django import forms
 from .models import (
     FocusArea, FocusAreaObjective, FocusAreaActivity,
     FocusAreaOutcome, FocusAreaPartner, FocusAreaMilestone
 )
-
-
-class FocusAreaAdminForm(forms.ModelForm):
-    """Custom form for FocusArea to ensure proper file upload handling"""
-    class Meta:
-        model = FocusArea
-        fields = '__all__'
-        widgets = {
-            'image': forms.ClearableFileInput(attrs={'accept': 'image/*'}),
-        }
 
 
 class FocusAreaObjectiveInline(admin.TabularInline):
@@ -48,7 +37,6 @@ class FocusAreaMilestoneInline(admin.TabularInline):
 
 @admin.register(FocusArea)
 class FocusAreaAdmin(admin.ModelAdmin):
-    form = FocusAreaAdminForm
     list_display = ['title', 'slug', 'status', 'start_date', 'order', 'created_at']
     list_filter = ['status', 'created_at']
     search_fields = ['title', 'description', 'overview_summary']
