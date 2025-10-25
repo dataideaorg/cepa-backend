@@ -11,7 +11,7 @@ def generate_uuid():
 
 def upload_to_focus_area_images(instance, filename):
     """Generate upload path for focus area images"""
-    return os.path.join('focus_areas', 'images', filename)
+    return f'focus_areas/images/{instance.id}/{filename}'
 
 
 class FocusArea(models.Model):
