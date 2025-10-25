@@ -184,7 +184,7 @@ REST_FRAMEWORK = {
 CORS_ALLOW_CREDENTIALS = True
 
 # Additional CORS settings for better compatibility
-CORS_ALLOW_ALL_ORIGINS = True  # Keep this False for security
+CORS_ALLOW_ALL_ORIGINS = False  # Use specific origins for security
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -207,6 +207,22 @@ CORS_ALLOW_METHODS = [
 
 # Media files configuration
 MEDIA_URL = '/media/'
+
+# Full media URL for absolute URLs in API responses
+if RAILWAY_ENVIRONMENT_NAME:
+    # Production: Use the Railway backend URL
+    FULL_MEDIA_URL = 'https://cepa-backend-production.up.railway.app/media/'
+else:
+    # Development: Use local backend URL
+    FULL_MEDIA_URL = 'http://localhost:8000/media/'
+
+# Add media URL to CORS allowed origins for image access
+CORS_ALLOWED_ORIGINS = [
+    "https://master.d1o07tzlhd1qin.amplifyapp.com",
+    "https://cepa.or.ug",
+    "https://www.cepa.or.ug",
+    "http://localhost:3000",  # For local frontend development
+]
 
 # Railway volume configuration
 if RAILWAY_ENVIRONMENT_NAME:

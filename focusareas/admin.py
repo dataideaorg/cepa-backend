@@ -48,7 +48,12 @@ class FocusAreaAdmin(admin.ModelAdmin):
         """Display image preview in admin"""
         if obj.image:
             from django.utils.html import format_html
-            return format_html('<img src="{}" style="max-height: 200px; max-width: 300px;" />', obj.image.url)
+            from django.conf import settings
+            # Use absolute URL for admin preview, ensuring no double slashes
+            base_url = settings.FULL_MEDIA_URL.rstrip('/')
+            image_path = obj.image.name.lstrip('/')
+            image_url = f"{base_url}/{image_path}"
+            return format_html('<img src="{}" style="max-height: 200px; max-width: 300px;" />', image_url)
         return "No image uploaded"
     image_preview.short_description = 'Current Image'
 
