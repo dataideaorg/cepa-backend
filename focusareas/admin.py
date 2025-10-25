@@ -49,11 +49,24 @@ class FocusAreaAdmin(admin.ModelAdmin):
         if obj.image:
             from django.utils.html import format_html
             from django.conf import settings
-            # Use absolute URL for admin preview, ensuring no double slashes
-            base_url = settings.FULL_MEDIA_URL.rstrip('/')
-            image_path = obj.image.name.lstrip('/')
-            image_url = f"{base_url}/{image_path}"
-            return format_html('<img src="{}" style="max-height: 200px; max-width: 300px;" />', image_url)
+
+            # Only show preview if the object has been saved (has an ID)
+            # and the image file actually exists
+            if obj.id and hasattr(obj.image, 'url'):
+                try:
+                    # Use absolute URL for admin preview, ensuring no double slashes
+                    base_url = settings.FULL_MEDIA_URL.rstrip('/')
+                    image_path = obj.image.name.lstrip('/')
+                    image_url = f"{base_url}/{image_path}"
+                    return format_html(
+                        '<img src="{}" style="max-height: 200px; max-width: 300px;" onerror="this.style.display=\'none\'; this.nextSibling.style.display=\'block\';" />'
+                        '<div style="display:none; color: #666;">Preview will be available after saving</div>',
+                        image_url
+                    )
+                except Exception:
+                    return "Image will be available after saving"
+            else:
+                return "Save to see image preview"
         return "No image uploaded"
     image_preview.short_description = 'Current Image'
 
