@@ -76,6 +76,7 @@ class FocusAreaActivity(models.Model):
     id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)
     focus_area = models.ForeignKey(FocusArea, on_delete=models.CASCADE, related_name='activities')
     text = models.TextField()
+    description = models.TextField(blank=True, null=True)
     order = models.IntegerField(default=0)
 
     class Meta:
