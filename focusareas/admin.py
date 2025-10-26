@@ -7,32 +7,42 @@ from .models import (
 
 class FocusAreaObjectiveInline(admin.TabularInline):
     model = FocusAreaObjective
-    extra = 1
+    extra = 0
     fields = ['text', 'order']
+    can_delete = True
+    show_change_link = True
 
 
 class FocusAreaActivityInline(admin.TabularInline):
     model = FocusAreaActivity
-    extra = 1
+    extra = 0
     fields = ['text', 'order']
+    can_delete = True
+    show_change_link = True
 
 
 class FocusAreaOutcomeInline(admin.TabularInline):
     model = FocusAreaOutcome
-    extra = 1
+    extra = 0
     fields = ['title', 'description', 'metric', 'order']
+    can_delete = True
+    show_change_link = True
 
 
 class FocusAreaPartnerInline(admin.TabularInline):
     model = FocusAreaPartner
-    extra = 1
+    extra = 0
     fields = ['name', 'type', 'role', 'order']
+    can_delete = True
+    show_change_link = True
 
 
 class FocusAreaMilestoneInline(admin.TabularInline):
     model = FocusAreaMilestone
-    extra = 1
+    extra = 0
     fields = ['year', 'event', 'order']
+    can_delete = True
+    show_change_link = True
 
 
 @admin.register(FocusArea)
