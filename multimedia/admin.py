@@ -24,6 +24,7 @@ class GalleryImageInline(admin.TabularInline):
     model = GalleryImage
     extra = 1
     fields = ['title', 'alt_text', 'image', 'caption', 'order']
+    show_change_link = True
 
 
 @admin.register(GalleryGroup)
