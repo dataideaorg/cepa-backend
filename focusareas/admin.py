@@ -1,8 +1,16 @@
 from django.contrib import admin
 from .models import (
     FocusArea, FocusAreaObjective, FocusAreaActivity,
-    FocusAreaOutcome, FocusAreaPartner, FocusAreaMilestone
+    FocusAreaOutcome, FocusAreaPartner, FocusAreaMilestone, FocusAreaBasicInformation
 )
+
+
+class FocusAreaBasicInformationInline(admin.StackedInline):
+    model = FocusAreaBasicInformation
+    extra = 0
+    fields = ['description', 'image', 'overview_summary', 'order',]
+    # readonly_fields = ('created', 'modified')
+    show_change_link = True
 
 
 class FocusAreaObjectiveInline(admin.TabularInline):
@@ -47,30 +55,26 @@ class FocusAreaMilestoneInline(admin.TabularInline):
 
 @admin.register(FocusArea)
 class FocusAreaAdmin(admin.ModelAdmin):
-    list_display = ['title', 'slug', 'status', 'start_date', 'order', 'created_at']
-    list_filter = ['status', 'created_at']
-    search_fields = ['title', 'description', 'overview_summary']
-    list_editable = ['order', 'status']
-    readonly_fields = ['created_at', 'updated_at']
+    list_display = ['title', 'slug', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['title']
+    list_editable = ['order']
+    readonly_fields = ['created_at']
     prepopulated_fields = {'slug': ('title',)}
+    show_change_link = True
 
     fieldsets = (
         ('Basic Information', {
-            'fields': ('title', 'slug', 'description', 'image', 'order')
-        }),
-        ('Overview', {
-            'fields': ('overview_summary',)
-        }),
-        ('Timeline', {
-            'fields': ('status', 'start_date')
+            'fields': ('title', 'slug')
         }),
         ('Metadata', {
-            'fields': ('created_at', 'updated_at'),
+            'fields': ('created_at',),
             'classes': ('collapse',)
         }),
     )
 
     inlines = [
+        FocusAreaBasicInformationInline,
         FocusAreaObjectiveInline,
         FocusAreaActivityInline,
         FocusAreaOutcomeInline,
@@ -78,6 +82,11 @@ class FocusAreaAdmin(admin.ModelAdmin):
         FocusAreaMilestoneInline,
     ]
 
+@admin.register(FocusAreaBasicInformation)
+class FocusAreaBasicInformationAdmin(admin.ModelAdmin):
+    list_display = ['focus_area']
+    list_filter = ['focus_area']
+    search_fields = ['focus_area__title']
 
 @admin.register(FocusAreaObjective)
 class FocusAreaObjectiveAdmin(admin.ModelAdmin):

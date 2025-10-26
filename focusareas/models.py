@@ -13,34 +13,11 @@ def upload_to_focus_area_images(instance, filename):
     """Generate upload path for focus area images"""
     return os.path.join('focus_areas', 'images', filename)
 
-
 class FocusArea(models.Model):
-    """Model for CEPA's focus areas"""
-    STATUS_CHOICES = [
-        ('Active', 'Active'),
-        ('Completed', 'Completed'),
-        ('Planned', 'Planned'),
-    ]
-
     id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)
     slug = models.SlugField(max_length=200, unique=True)
     title = models.CharField(max_length=255)
-    description = models.TextField(help_text="Short description for cards and previews")
-    image = models.ImageField(upload_to=upload_to_focus_area_images)
-
-    # Overview section
-    overview_summary = models.TextField(help_text="Detailed summary for the overview section")
-
-    # Timeline
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Active')
-    start_date = models.CharField(max_length=100, help_text="E.g., 'January 2020'")
-
-    # Display order
-    order = models.IntegerField(default=0, help_text="Display order (lower numbers appear first)")
-
-    # Metadata
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['order', 'title']
@@ -49,6 +26,33 @@ class FocusArea(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class FocusAreaBasicInformation(models.Model):
+    """Model for CEPA's focus areas"""
+    STATUS_CHOICES = [
+        ('Active', 'Active'),
+        ('Completed', 'Completed'),
+        ('Planned', 'Planned'),
+    ]
+    focus_area = models.OneToOneField(FocusArea, on_delete=models.CASCADE, related_name='basic_information')
+    image = models.ImageField(upload_to=upload_to_focus_area_images)
+
+    # Overview section
+    overview_summary = models.TextField(help_text="Detailed summary for the overview section")
+
+    # Timeline
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Active')
+    start_date = models.CharField(max_length=100, help_text="E.g., 'January 2020'")
+    order = models.IntegerField(default=0, help_text="Display order (lower numbers appear first)")
+
+    # Metadata
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'FocusArea Basic Information'
+        verbose_name_plural = 'FocusArea Basic Information'
 
 
 class FocusAreaObjective(models.Model):
