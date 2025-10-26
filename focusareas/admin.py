@@ -8,8 +8,7 @@ from .models import (
 class FocusAreaBasicInformationInline(admin.StackedInline):
     model = FocusAreaBasicInformation
     extra = 0
-    fields = ['description', 'image', 'overview_summary', 'order',]
-    # readonly_fields = ('created', 'modified')
+    fields = ['image', 'overview_summary', 'status', 'start_date', 'order']
     show_change_link = True
 
 
