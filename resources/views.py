@@ -36,6 +36,14 @@ class BlogPostViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(featured_posts, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['get'])
+    def categories(self, request):
+        """Get all unique blog categories"""
+        categories = self.queryset.values_list('category', flat=True).distinct()
+        # Filter out None/empty values
+        categories = [cat for cat in categories if cat]
+        return Response(categories)
+
     @action(detail=False, methods=['get'], url_path='slug/(?P<slug>[^/.]+)')
     def by_slug(self, request, slug=None):
         """Get blog post by slug"""
@@ -45,7 +53,7 @@ class BlogPostViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except BlogPost.DoesNotExist:
             return Response(
-                {'error': 'Blog post not found'}, 
+                {'error': 'Blog post not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
 
@@ -69,6 +77,14 @@ class NewsArticleViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
+    def categories(self, request):
+        """Get all unique news categories"""
+        categories = self.queryset.values_list('category', flat=True).distinct()
+        # Filter out None/empty values
+        categories = [cat for cat in categories if cat]
+        return Response(categories)
+
+    @action(detail=False, methods=['get'])
     def by_slug(self, request, slug=None):
         """Get news article by slug"""
         try:
@@ -77,7 +93,7 @@ class NewsArticleViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except NewsArticle.DoesNotExist:
             return Response(
-                {'error': 'News article not found'}, 
+                {'error': 'News article not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
 
@@ -128,6 +144,14 @@ class EventViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
+    def categories(self, request):
+        """Get all unique event categories"""
+        categories = self.queryset.values_list('category', flat=True).distinct()
+        # Filter out None/empty values
+        categories = [cat for cat in categories if cat]
+        return Response(categories)
+
+    @action(detail=False, methods=['get'])
     def upcoming(self, request):
         """Get upcoming events"""
         upcoming_events = self.queryset.filter(status='upcoming')
@@ -150,7 +174,7 @@ class EventViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Event.DoesNotExist:
             return Response(
-                {'error': 'Event not found'}, 
+                {'error': 'Event not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
 
