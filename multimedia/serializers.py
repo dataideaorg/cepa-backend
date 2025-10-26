@@ -30,7 +30,8 @@ class VideoSerializer(serializers.ModelSerializer):
 
 class GalleryImageSerializer(serializers.ModelSerializer):
     """Serializer for GalleryImage model"""
-    
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = GalleryImage
         fields = [
@@ -38,19 +39,33 @@ class GalleryImageSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at'
         ]
 
+    def get_image(self, obj):
+        """Get absolute URL for the image"""
+        if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+            return obj.image.url
+        return None
+
 
 class GalleryGroupSerializer(serializers.ModelSerializer):
     """Serializer for GalleryGroup model with nested images"""
-    images = GalleryImageSerializer(many=True, read_only=True)
+    images = serializers.SerializerMethodField()
     image_count = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = GalleryGroup
         fields = [
-            'id', 'title', 'description', 'featured', 'date', 
+            'id', 'title', 'description', 'featured', 'date',
             'images', 'image_count', 'created_at', 'updated_at'
         ]
-    
+
+    def get_images(self, obj):
+        """Get images with proper context for absolute URLs"""
+        images = obj.images.all().order_by('order', 'created_at')
+        return GalleryImageSerializer(images, many=True, context=self.context).data
+
     def get_image_count(self, obj):
         """Get the number of images in this group"""
         return obj.images.count()

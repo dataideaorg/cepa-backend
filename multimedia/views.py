@@ -74,18 +74,13 @@ class VideoViewSet(viewsets.ModelViewSet):
 class GalleryGroupViewSet(viewsets.ModelViewSet):
     """ViewSet for GalleryGroup model with full CRUD operations"""
     queryset = GalleryGroup.objects.all()
-    
-    def get_serializer_class(self):
-        """Use different serializers for list vs detail views"""
-        if self.action == 'list':
-            return GalleryGroupListSerializer
-        return GalleryGroupSerializer
+    serializer_class = GalleryGroupSerializer
 
     @action(detail=False, methods=['get'])
     def featured(self, request):
         """Get featured gallery groups"""
         featured_groups = self.queryset.filter(featured=True)
-        serializer = self.get_serializer(featured_groups, many=True)
+        serializer = self.get_serializer(featured_groups, many=True, context={'request': request})
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'])
