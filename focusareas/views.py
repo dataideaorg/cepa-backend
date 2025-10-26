@@ -16,16 +16,16 @@ class StandardResultsSetPagination(PageNumberPagination):
 
 class FocusAreaViewSet(viewsets.ModelViewSet):
     """ViewSet for FocusArea model with full CRUD operations"""
-    queryset = FocusArea.objects.all().prefetch_related(
+    queryset = FocusArea.objects.all().select_related('basic_information').prefetch_related(
         'objectives', 'activities', 'outcomes', 'partners', 'milestones'
     )
     serializer_class = FocusAreaSerializer
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['status']
-    search_fields = ['title', 'description', 'overview_summary']
-    ordering_fields = ['order', 'title', 'created_at']
-    ordering = ['order', 'title']
+    filterset_fields = ['basic_information__status']
+    search_fields = ['title', 'basic_information__overview_summary']
+    ordering_fields = ['basic_information__order', 'title', 'created_at']
+    ordering = ['basic_information__order', 'title']
 
     def get_serializer_class(self):
         """Use list serializer for list view, detail serializer for others"""
@@ -49,6 +49,6 @@ class FocusAreaViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def active(self, request):
         """Get all active focus areas"""
-        active_focus_areas = self.queryset.filter(status='Active')
+        active_focus_areas = self.queryset.filter(basic_information__status='Active')
         serializer = self.get_serializer(active_focus_areas, many=True)
         return Response(serializer.data)
