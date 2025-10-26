@@ -23,7 +23,7 @@ class FocusAreaObjectiveInline(admin.TabularInline):
 class FocusAreaActivityInline(admin.TabularInline):
     model = FocusAreaActivity
     extra = 0
-    fields = ['text', 'description', 'order']
+    fields = ['text', 'order']
     can_delete = True
     show_change_link = True
 
