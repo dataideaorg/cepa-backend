@@ -26,7 +26,7 @@ class FocusArea(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     title = models.CharField(max_length=255)
     description = models.TextField(help_text="Short description for cards and previews")
-    image = models.ImageField(upload_to=upload_to_focus_area_images, blank=True, null=True)
+    image = models.ImageField(upload_to=upload_to_focus_area_images)
 
     # Overview section
     overview_summary = models.TextField(help_text="Detailed summary for the overview section")
