@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.conf import settings
 from .models import (
-    FocusArea, FocusAreaObjective, FocusAreaActivity,
+    FocusArea, FocusAreaBasicInformation, FocusAreaObjective, FocusAreaActivity,
     FocusAreaOutcome, FocusAreaPartner, FocusAreaMilestone
 )
 

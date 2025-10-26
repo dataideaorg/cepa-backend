@@ -20,7 +20,7 @@ class FocusArea(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['order', 'title']
+        ordering = ['title']
         verbose_name = 'Focus Area'
         verbose_name_plural = 'Focus Areas'
 

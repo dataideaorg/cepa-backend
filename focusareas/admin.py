@@ -58,7 +58,6 @@ class FocusAreaAdmin(admin.ModelAdmin):
     list_display = ['title', 'slug', 'created_at']
     list_filter = ['created_at']
     search_fields = ['title']
-    list_editable = ['order']
     readonly_fields = ['created_at']
     prepopulated_fields = {'slug': ('title',)}
     show_change_link = True
