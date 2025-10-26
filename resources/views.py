@@ -100,6 +100,14 @@ class PublicationViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(featured_publications, many=True)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['get'])
+    def categories(self, request):
+        """Get all unique publication categories"""
+        categories = self.queryset.values_list('category', flat=True).distinct()
+        # Filter out None/empty values
+        categories = [cat for cat in categories if cat]
+        return Response(categories)
+
 
 class EventViewSet(viewsets.ModelViewSet):
     """ViewSet for Event model with full CRUD operations"""
