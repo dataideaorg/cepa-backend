@@ -51,8 +51,8 @@ class FocusAreaBasicInformation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'FocusArea Basic Information'
-        verbose_name_plural = 'FocusArea Basic Information'
+        verbose_name = 'Basic Information'
+        verbose_name_plural = 'Basic Information'
 
 
 class FocusAreaObjective(models.Model):
