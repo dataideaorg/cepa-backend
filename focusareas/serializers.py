@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.conf import settings
 from .models import (
     FocusArea, FocusAreaBasicInformation, FocusAreaObjective, FocusAreaActivity,
-    FocusAreaOutcome, FocusAreaPartner, FocusAreaMilestone
+    FocusAreaOutcome, FocusAreaPartner, FocusAreaMilestone, FocusAreaResources
 )
 
 
@@ -46,6 +46,24 @@ class FocusAreaMilestoneSerializer(serializers.ModelSerializer):
         fields = ['id', 'year', 'event', 'order']
 
 
+class FocusAreaResourcesSerializer(serializers.ModelSerializer):
+    """Serializer for FocusAreaResources model"""
+    file_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = FocusAreaResources
+        fields = ['id', 'name', 'file', 'file_url', 'order']
+
+    def get_file_url(self, obj):
+        """Return absolute URL for the file"""
+        if obj.file:
+            # Ensure no double slashes in URL
+            base_url = settings.FULL_MEDIA_URL.rstrip('/')
+            file_path = obj.file.name.lstrip('/')
+            return f"{base_url}/{file_path}"
+        return None
+
+
 class FocusAreaBasicInformationSerializer(serializers.ModelSerializer):
     """Serializer for FocusAreaBasicInformation model"""
     image_url = serializers.SerializerMethodField()
@@ -71,6 +89,7 @@ class FocusAreaSerializer(serializers.ModelSerializer):
     outcomes = FocusAreaOutcomeSerializer(many=True, read_only=True)
     partners = FocusAreaPartnerSerializer(many=True, read_only=True)
     milestones = FocusAreaMilestoneSerializer(many=True, read_only=True)
+    resources = FocusAreaResourcesSerializer(many=True, read_only=True)
 
     # Flatten basic_information fields
     image = serializers.SerializerMethodField()
@@ -86,7 +105,7 @@ class FocusAreaSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'slug', 'title', 'image', 'image_url',
             'overview_summary', 'status', 'start_date', 'order',
-            'objectives', 'activities', 'outcomes', 'partners', 'milestones',
+            'objectives', 'activities', 'outcomes', 'partners', 'milestones', 'resources',
             'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at']

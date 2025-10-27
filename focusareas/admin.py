@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     FocusArea, FocusAreaObjective, FocusAreaActivity,
-    FocusAreaOutcome, FocusAreaPartner, FocusAreaMilestone, FocusAreaBasicInformation
+    FocusAreaOutcome, FocusAreaPartner, FocusAreaMilestone, FocusAreaBasicInformation, FocusAreaResources
 )
 
 
@@ -52,6 +52,14 @@ class FocusAreaMilestoneInline(admin.TabularInline):
     show_change_link = True
 
 
+class FocusAreaResourcesInline(admin.TabularInline):
+    model = FocusAreaResources
+    extra = 0
+    fields = ['name', 'file', 'order']
+    can_delete = True
+    show_change_link = True
+
+
 @admin.register(FocusArea)
 class FocusAreaAdmin(admin.ModelAdmin):
     list_display = ['title', 'slug', 'created_at']
@@ -78,6 +86,7 @@ class FocusAreaAdmin(admin.ModelAdmin):
         FocusAreaOutcomeInline,
         FocusAreaPartnerInline,
         FocusAreaMilestoneInline,
+        FocusAreaResourcesInline,
     ]
 
 @admin.register(FocusAreaBasicInformation)
@@ -123,4 +132,12 @@ class FocusAreaMilestoneAdmin(admin.ModelAdmin):
     list_display = ['focus_area', 'year', 'event', 'order']
     list_filter = ['focus_area', 'year']
     search_fields = ['event']
+    list_editable = ['order']
+
+
+@admin.register(FocusAreaResources)
+class FocusAreaResourcesAdmin(admin.ModelAdmin):
+    list_display = ['focus_area', 'name', 'file', 'order']
+    list_filter = ['focus_area']
+    search_fields = ['name']
     list_editable = ['order']

@@ -148,3 +148,22 @@ class FocusAreaMilestone(models.Model):
 
     def __str__(self):
         return f"{self.focus_area.title} - {self.year}"
+
+
+class FocusAreaResources(models.Model):
+    """Resources for a focus area"""
+    id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)
+    focus_area = models.ForeignKey(FocusArea, on_delete=models.CASCADE, related_name='resources')
+    name = models.CharField(max_length=255)
+    file = models.FileField(upload_to='resources/focus-area')
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = 'Resource'
+        verbose_name_plural = 'Resources'
+
+    def __str__(self):
+        return f"{self.focus_area.title} - {self.name}"
+
+

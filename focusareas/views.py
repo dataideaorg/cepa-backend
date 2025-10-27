@@ -17,7 +17,7 @@ class StandardResultsSetPagination(PageNumberPagination):
 class FocusAreaViewSet(viewsets.ModelViewSet):
     """ViewSet for FocusArea model with full CRUD operations"""
     queryset = FocusArea.objects.all().select_related('basic_information').prefetch_related(
-        'objectives', 'activities', 'outcomes', 'partners', 'milestones'
+        'objectives', 'activities', 'outcomes', 'partners', 'milestones', 'resources'
     )
     serializer_class = FocusAreaSerializer
     pagination_class = StandardResultsSetPagination
