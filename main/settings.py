@@ -219,6 +219,7 @@ else:
 # Add media URL to CORS allowed origins for image access
 CORS_ALLOWED_ORIGINS = [
     "https://master.d1o07tzlhd1qin.amplifyapp.com",
+    "https://master.dpdvoaezt60xm.amplifyapp.com/",
     "https://cepa.or.ug",
     "https://www.cepa.or.ug",
     "http://localhost:3000",  # For local frontend development
