@@ -41,10 +41,7 @@ class CohortAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Basic Information', {
-            'fields': ('name', 'year', 'slug', 'is_active')
-        }),
-        ('Content', {
-            'fields': ('overview', 'hero_image')
+            'fields': ('name', 'year', 'slug', 'is_active', 'overview')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),

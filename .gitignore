@@ -1,6 +1,7 @@
 media/
 focus_areas.md
 *.DS_Store
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
