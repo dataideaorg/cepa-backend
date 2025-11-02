@@ -6,24 +6,28 @@ class FellowInline(admin.TabularInline):
     model = Fellow
     extra = 1
     fields = ['name', 'position', 'profile_image']
+    show_change_link = True
 
 
 class CohortProjectInline(admin.TabularInline):
     model = CohortProject
     extra = 1
     fields = ['title', 'description', 'project_url']
+    show_change_link = True
 
 
 class CohortEventInline(admin.TabularInline):
     model = CohortEvent
     extra = 1
     fields = ['title', 'event_date', 'location']
+    show_change_link = True
 
 
 class CohortGalleryImageInline(admin.TabularInline):
     model = CohortGalleryImage
     extra = 1
     fields = ['image', 'caption']
+    show_change_link = True
 
 
 @admin.register(Cohort)
