@@ -53,7 +53,7 @@ class CohortDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cohort
-        fields = ['id', 'name', 'year', 'overview', 'hero_image', 'is_active',
+        fields = ['id', 'name', 'year', 'overview', 'is_active',
                   'slug', 'fellows', 'projects', 'events', 'gallery_images',
                   'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']

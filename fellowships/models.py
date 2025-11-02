@@ -15,7 +15,6 @@ class Cohort(models.Model):
     name = models.CharField(max_length=200, help_text='e.g., 2025 Cohort')
     year = models.IntegerField()
     overview = models.TextField(help_text='Overview description of this cohort')
-    hero_image = models.ImageField(upload_to='cohorts/hero/', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     slug = models.CharField(max_length=200, unique=True)
     created_at = models.DateTimeField(default=timezone.now)
