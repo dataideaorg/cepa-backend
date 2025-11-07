@@ -1,4 +1,5 @@
 from django.contrib import admin
+from .widgets import QuillEditorWidget
 from .models import BlogPost, NewsArticle, Publication, Event
 
 
@@ -11,6 +12,30 @@ class BlogPostAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
     date_hierarchy = 'date'
 
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('title', 'date', 'category', 'featured')
+        }),
+        ('Content', {
+            'fields': ('description', 'content', 'image'),
+            'classes': ('wide',)
+        }),
+        ('Advanced', {
+            'fields': ('slug',),
+            'classes': ('collapse',)
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        # Apply Quill editor only to the content field
+        form.base_fields['content'].widget = QuillEditorWidget()
+        return form
+
 
 @admin.register(NewsArticle)
 class NewsArticleAdmin(admin.ModelAdmin):
@@ -20,6 +45,30 @@ class NewsArticleAdmin(admin.ModelAdmin):
     list_editable = ['featured']
     readonly_fields = ['created_at', 'updated_at']
     date_hierarchy = 'date'
+
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('title', 'date', 'category', 'featured')
+        }),
+        ('Content', {
+            'fields': ('description', 'content', 'image'),
+            'classes': ('wide',)
+        }),
+        ('Advanced', {
+            'fields': ('slug',),
+            'classes': ('collapse',)
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        # Apply Quill editor only to the content field
+        form.base_fields['content'].widget = QuillEditorWidget()
+        return form
 
 
 @admin.register(Publication)
