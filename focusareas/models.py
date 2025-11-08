@@ -13,6 +13,11 @@ def upload_to_focus_area_images(instance, filename):
     """Generate upload path for focus area images"""
     return os.path.join('focus_areas', 'images', filename)
 
+
+def upload_to_partner_logos(instance, filename):
+    """Generate upload path for partner logos"""
+    return os.path.join('partners', 'logos', filename)
+
 class FocusArea(models.Model):
     id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)
     slug = models.SlugField(max_length=200, unique=True)
@@ -122,6 +127,7 @@ class FocusAreaPartner(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=100, choices=PARTNER_TYPES)
     role = models.TextField(help_text="Description of their role in this focus area")
+    logo = models.ImageField(upload_to=upload_to_partner_logos, blank=True, null=True, help_text="Partner organization logo")
     order = models.IntegerField(default=0)
 
     class Meta:

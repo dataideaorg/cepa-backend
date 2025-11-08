@@ -32,10 +32,20 @@ class FocusAreaOutcomeSerializer(serializers.ModelSerializer):
 
 class FocusAreaPartnerSerializer(serializers.ModelSerializer):
     """Serializer for FocusAreaPartner model"""
+    logo = serializers.SerializerMethodField()
 
     class Meta:
         model = FocusAreaPartner
-        fields = ['id', 'name', 'type', 'role', 'order']
+        fields = ['id', 'name', 'type', 'role', 'logo', 'order']
+
+    def get_logo(self, obj):
+        """Return absolute URL for the partner logo"""
+        if obj.logo:
+            # Ensure no double slashes in URL
+            base_url = settings.FULL_MEDIA_URL.rstrip('/')
+            logo_path = obj.logo.name.lstrip('/')
+            return f"{base_url}/{logo_path}"
+        return None
 
 
 class FocusAreaMilestoneSerializer(serializers.ModelSerializer):

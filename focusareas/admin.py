@@ -39,7 +39,7 @@ class FocusAreaOutcomeInline(admin.TabularInline):
 class FocusAreaPartnerInline(admin.TabularInline):
     model = FocusAreaPartner
     extra = 0
-    fields = ['name', 'type', 'role', 'order']
+    fields = ['name', 'type', 'role', 'logo', 'order']
     can_delete = True
     show_change_link = True
 
@@ -125,6 +125,7 @@ class FocusAreaPartnerAdmin(admin.ModelAdmin):
     list_filter = ['focus_area', 'type']
     search_fields = ['name', 'role']
     list_editable = ['order']
+    fields = ['focus_area', 'name', 'type', 'role', 'logo', 'order']
 
 
 @admin.register(FocusAreaMilestone)
