@@ -14,6 +14,7 @@ class Cohort(models.Model):
     id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)
     name = models.CharField(max_length=200, help_text='e.g., 2025 Cohort')
     year = models.IntegerField()
+    image = models.ImageField(upload_to='cohorts/', blank=True, null=True)
     overview = models.TextField(help_text='Overview description of this cohort')
     is_active = models.BooleanField(default=True)
     slug = models.CharField(max_length=200, unique=True)
