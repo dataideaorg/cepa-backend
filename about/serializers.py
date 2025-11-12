@@ -3,7 +3,7 @@ from django.conf import settings
 from .models import (
     HeroSection, WhoWeAreSection, WhoWeAreFeature, StatCard,
     OurStorySection, OurStoryCard, WhatSetsUsApartSection,
-    WhatSetsUsApartCard, CallToActionSection
+    WhatSetsUsApartCard, CallToActionSection, TeamMember
 )
 
 
@@ -91,6 +91,23 @@ class CallToActionSectionSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'updated_at']
 
 
+class TeamMemberSerializer(serializers.ModelSerializer):
+    """Serializer for Team Member"""
+    profile_image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TeamMember
+        fields = ['id', 'name', 'role', 'profile_image', 'profile_image_url', 'linkedin_url', 'order', 'is_active', 'updated_at']
+
+    def get_profile_image_url(self, obj):
+        """Return absolute URL for the profile image"""
+        if obj.profile_image:
+            base_url = settings.FULL_MEDIA_URL.rstrip('/')
+            image_path = obj.profile_image.name.lstrip('/')
+            return f"{base_url}/{image_path}"
+        return None
+
+
 class AboutPageSerializer(serializers.Serializer):
     """Combined serializer for all About page sections"""
     hero = HeroSectionSerializer(read_only=True)
@@ -99,3 +116,4 @@ class AboutPageSerializer(serializers.Serializer):
     our_story = OurStorySectionSerializer(read_only=True)
     what_sets_us_apart = WhatSetsUsApartSectionSerializer(read_only=True)
     call_to_action = CallToActionSectionSerializer(read_only=True)
+    team = TeamMemberSerializer(many=True, read_only=True)

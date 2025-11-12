@@ -3,12 +3,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import (
     HeroSection, WhoWeAreSection, StatCard,
-    OurStorySection, WhatSetsUsApartSection, CallToActionSection
+    OurStorySection, WhatSetsUsApartSection, CallToActionSection, TeamMember
 )
 from .serializers import (
     HeroSectionSerializer, WhoWeAreSectionSerializer, StatCardSerializer,
     OurStorySectionSerializer, WhatSetsUsApartSectionSerializer,
-    CallToActionSectionSerializer, AboutPageSerializer
+    CallToActionSectionSerializer, TeamMemberSerializer, AboutPageSerializer
 )
 
 
@@ -25,6 +25,7 @@ def about_page_view(request):
         our_story = OurStorySection.objects.prefetch_related('cards').first()
         what_sets_us_apart = WhatSetsUsApartSection.objects.prefetch_related('cards').first()
         call_to_action = CallToActionSection.objects.first()
+        team = TeamMember.objects.filter(is_active=True).order_by('order')
 
         # Serialize all sections
         data = {
@@ -34,6 +35,7 @@ def about_page_view(request):
             'our_story': OurStorySectionSerializer(our_story).data if our_story else None,
             'what_sets_us_apart': WhatSetsUsApartSectionSerializer(what_sets_us_apart).data if what_sets_us_apart else None,
             'call_to_action': CallToActionSectionSerializer(call_to_action).data if call_to_action else None,
+            'team': TeamMemberSerializer(team, many=True).data,
         }
 
         return Response(data, status=status.HTTP_200_OK)
@@ -79,3 +81,9 @@ class CallToActionSectionViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for Call to Action Section"""
     queryset = CallToActionSection.objects.all()
     serializer_class = CallToActionSectionSerializer
+
+
+class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
+    """ViewSet for Team Members"""
+    queryset = TeamMember.objects.filter(is_active=True).order_by('order')
+    serializer_class = TeamMemberSerializer

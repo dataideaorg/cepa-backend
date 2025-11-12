@@ -162,3 +162,23 @@ class CallToActionSection(models.Model):
         if not self.pk and CallToActionSection.objects.exists():
             raise ValueError('Only one Call to Action Section instance is allowed')
         return super().save(*args, **kwargs)
+
+
+class TeamMember(models.Model):
+    """Team member for the Our Team section"""
+    name = models.CharField(max_length=255, help_text="Full name")
+    role = models.CharField(max_length=255, help_text="Job title/role")
+    profile_image = models.ImageField(upload_to='team/', help_text="Team member photo")
+    linkedin_url = models.URLField(max_length=500, blank=True, null=True, help_text="LinkedIn profile URL")
+    order = models.IntegerField(default=0, help_text="Display order (lower numbers appear first)")
+    is_active = models.BooleanField(default=True, help_text="Show on website")
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = 'Team Member'
+        verbose_name_plural = 'Team Members'
+
+    def __str__(self):
+        return f"{self.name} - {self.role}"

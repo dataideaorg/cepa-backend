@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     HeroSection, WhoWeAreSection, WhoWeAreFeature, StatCard,
     OurStorySection, OurStoryCard, WhatSetsUsApartSection,
-    WhatSetsUsApartCard, CallToActionSection
+    WhatSetsUsApartCard, CallToActionSection, TeamMember
 )
 
 
@@ -166,3 +166,24 @@ class CallToActionSectionAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(TeamMember)
+class TeamMemberAdmin(admin.ModelAdmin):
+    list_display = ['name', 'role', 'order', 'is_active', 'updated_at']
+    list_filter = ['is_active', 'role']
+    list_editable = ['order', 'is_active']
+    search_fields = ['name', 'role']
+    readonly_fields = ['created_at', 'updated_at']
+    fieldsets = (
+        ('Team Member Info', {
+            'fields': ('name', 'role', 'profile_image', 'linkedin_url')
+        }),
+        ('Display Settings', {
+            'fields': ('order', 'is_active')
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
