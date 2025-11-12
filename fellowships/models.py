@@ -30,6 +30,15 @@ class Cohort(models.Model):
         return self.name
 
 
+class CohortBasicInfo(Cohort):
+    """Proxy model to expose cohort basic information without inline relations"""
+
+    class Meta:
+        proxy = True
+        verbose_name = 'Cohort Basic Info'
+        verbose_name_plural = 'Cohort Basic Info'
+
+
 class Fellow(models.Model):
     """Model for fellowship cohort members"""
     id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Cohort, Fellow, CohortProject, CohortEvent, CohortGalleryImage
+from .models import Cohort, CohortBasicInfo, Fellow, CohortProject, CohortEvent, CohortGalleryImage
 
 
 class FellowInline(admin.TabularInline):
@@ -39,6 +39,25 @@ class CohortAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
     inlines = [FellowInline, CohortProjectInline, CohortEventInline, CohortGalleryImageInline]
 
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'year', 'image', 'slug', 'is_active', 'overview')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+
+@admin.register(CohortBasicInfo)
+class CohortBasicInfoAdmin(admin.ModelAdmin):
+    """Admin interface for updating only cohort core fields"""
+    list_display = ['name', 'year', 'is_active', 'created_at']
+    list_filter = ['year', 'is_active']
+    search_fields = ['name', 'overview']
+    prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ['created_at', 'updated_at']
     fieldsets = (
         ('Basic Information', {
             'fields': ('name', 'year', 'image', 'slug', 'is_active', 'overview')
