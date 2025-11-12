@@ -182,3 +182,23 @@ class TeamMember(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.role}"
+
+
+class Partner(models.Model):
+    """Partner organization for the Partners section"""
+    name = models.CharField(max_length=255, help_text="Partner organization name")
+    full_name = models.CharField(max_length=500, blank=True, null=True, help_text="Full organization name (optional)")
+    logo = models.ImageField(upload_to='partners/', help_text="Partner logo")
+    website_url = models.URLField(max_length=500, blank=True, null=True, help_text="Partner website URL (optional)")
+    order = models.IntegerField(default=0, help_text="Display order (lower numbers appear first)")
+    is_active = models.BooleanField(default=True, help_text="Show on website")
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = 'Partner'
+        verbose_name_plural = 'Partners'
+
+    def __str__(self):
+        return self.name

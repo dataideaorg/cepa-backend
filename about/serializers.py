@@ -3,7 +3,7 @@ from django.conf import settings
 from .models import (
     HeroSection, WhoWeAreSection, WhoWeAreFeature, StatCard,
     OurStorySection, OurStoryCard, WhatSetsUsApartSection,
-    WhatSetsUsApartCard, CallToActionSection, TeamMember
+    WhatSetsUsApartCard, CallToActionSection, TeamMember, Partner
 )
 
 
@@ -108,6 +108,23 @@ class TeamMemberSerializer(serializers.ModelSerializer):
         return None
 
 
+class PartnerSerializer(serializers.ModelSerializer):
+    """Serializer for Partner"""
+    logo_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Partner
+        fields = ['id', 'name', 'full_name', 'logo', 'logo_url', 'website_url', 'order', 'is_active', 'updated_at']
+
+    def get_logo_url(self, obj):
+        """Return absolute URL for the partner logo"""
+        if obj.logo:
+            base_url = settings.FULL_MEDIA_URL.rstrip('/')
+            image_path = obj.logo.name.lstrip('/')
+            return f"{base_url}/{image_path}"
+        return None
+
+
 class AboutPageSerializer(serializers.Serializer):
     """Combined serializer for all About page sections"""
     hero = HeroSectionSerializer(read_only=True)
@@ -117,3 +134,4 @@ class AboutPageSerializer(serializers.Serializer):
     what_sets_us_apart = WhatSetsUsApartSectionSerializer(read_only=True)
     call_to_action = CallToActionSectionSerializer(read_only=True)
     team = TeamMemberSerializer(many=True, read_only=True)
+    partners = PartnerSerializer(many=True, read_only=True)

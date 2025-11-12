@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     HeroSection, WhoWeAreSection, WhoWeAreFeature, StatCard,
     OurStorySection, OurStoryCard, WhatSetsUsApartSection,
-    WhatSetsUsApartCard, CallToActionSection, TeamMember
+    WhatSetsUsApartCard, CallToActionSection, TeamMember, Partner
 )
 
 
@@ -178,6 +178,27 @@ class TeamMemberAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Team Member Info', {
             'fields': ('name', 'role', 'profile_image', 'linkedin_url')
+        }),
+        ('Display Settings', {
+            'fields': ('order', 'is_active')
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+
+@admin.register(Partner)
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ['name', 'order', 'is_active', 'updated_at']
+    list_filter = ['is_active']
+    list_editable = ['order', 'is_active']
+    search_fields = ['name', 'full_name']
+    readonly_fields = ['created_at', 'updated_at']
+    fieldsets = (
+        ('Partner Info', {
+            'fields': ('name', 'full_name', 'logo', 'website_url')
         }),
         ('Display Settings', {
             'fields': ('order', 'is_active')
