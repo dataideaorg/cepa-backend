@@ -17,7 +17,6 @@ class HeroSection(models.Model):
         return "About Page - Hero Section"
 
     def save(self, *args, **kwargs):
-        # Ensure only one instance exists
         if not self.pk and HeroSection.objects.exists():
             raise ValueError('Only one Hero Section instance is allowed')
         return super().save(*args, **kwargs)
@@ -45,7 +44,7 @@ class WhoWeAreSection(models.Model):
 class WhoWeAreFeature(models.Model):
     """Features for Who We Are section"""
     section = models.ForeignKey(WhoWeAreSection, on_delete=models.CASCADE, related_name='features')
-    icon = models.CharField(max_length=10, help_text="Emoji icon (e.g., =,, >, <Û)")
+    icon = models.CharField(max_length=10, help_text="Emoji icon")
     title = models.CharField(max_length=255)
     description = models.TextField()
     order = models.IntegerField(default=0)
@@ -97,7 +96,7 @@ class OurStorySection(models.Model):
 class OurStoryCard(models.Model):
     """Cards for Our Story section (Vision, Mission, Values)"""
     section = models.ForeignKey(OurStorySection, on_delete=models.CASCADE, related_name='cards')
-    icon = models.CharField(max_length=10, help_text="Emoji icon (e.g., <¯, –, <)")
+    icon = models.CharField(max_length=10, help_text="Emoji icon")
     title = models.CharField(max_length=255, help_text="e.g., 'Our Vision', 'Our Mission', 'Our Values'")
     description = models.TextField()
     order = models.IntegerField(default=0)
