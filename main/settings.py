@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'fellowships',
     'focusareas',
     'about',
+    'home',
 ]
 
 MIDDLEWARE = [
