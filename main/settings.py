@@ -68,7 +68,7 @@ ROOT_URLCONF = 'main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -218,15 +218,6 @@ else:
     # Development: Use local backend URL
     FULL_MEDIA_URL = 'http://localhost:8000/media/'
 
-# Add media URL to CORS allowed origins for image access
-CORS_ALLOWED_ORIGINS = [
-    "https://master.d1o07tzlhd1qin.amplifyapp.com",
-    "https://master.dpdvoaezt60xm.amplifyapp.com",
-    "https://cepa.or.ug",
-    "https://www.cepa.or.ug",
-    "http://localhost:3000",  # For local frontend development
-]
-
 # Railway volume configuration
 if RAILWAY_ENVIRONMENT_NAME:
     print(RAILWAY_ENVIRONMENT_NAME)
@@ -236,6 +227,17 @@ if RAILWAY_ENVIRONMENT_NAME:
 else:
     # Local development media directory
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    
+
 # Ensure media directory exists
 os.makedirs(MEDIA_ROOT, exist_ok=True)
+
+# Add media URL to CORS allowed origins for image access
+CORS_ALLOWED_ORIGINS = [
+    "https://master.d1o07tzlhd1qin.amplifyapp.com",
+    "https://master.dpdvoaezt60xm.amplifyapp.com",
+    "https://cepa.or.ug",
+    "https://www.cepa.or.ug",
+    "http://localhost:3000",  # For local frontend development
+]
+
+
