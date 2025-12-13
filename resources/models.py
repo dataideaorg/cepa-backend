@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import URLValidator
+from ckeditor.fields import RichTextField
 import uuid
 import os
 
@@ -40,7 +41,7 @@ class BlogPost(models.Model):
     image = models.ImageField(upload_to=upload_to_blog_images, blank=True, null=True)
     slug = models.CharField(max_length=500, unique=True, blank=True)
     featured = models.BooleanField(default=False)
-    content = models.TextField(blank=True, null=True)
+    content = RichTextField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -63,7 +64,7 @@ class NewsArticle(models.Model):
     image = models.ImageField(upload_to=upload_to_news_images, blank=True, null=True)
     slug = models.CharField(max_length=500, unique=True, blank=True)
     featured = models.BooleanField(default=False)
-    content = models.TextField(blank=True, null=True)
+    content = RichTextField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 

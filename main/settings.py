@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'corsheaders',
+    'ckeditor',
     'resources',
     'multimedia',
     'contact',
@@ -239,5 +240,32 @@ CORS_ALLOWED_ORIGINS = [
     "https://www.cepa.or.ug",
     "http://localhost:3000",  # For local frontend development
 ]
+
+# CKEditor Configuration
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Standard',
+        'height': 400,
+        'width': '100%',
+        'toolbar_Standard': [
+            ['Styles', 'Format'],
+            ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source'],
+        ],
+        'stylesSet': [
+            {'name': 'Heading 1', 'element': 'h1'},
+            {'name': 'Heading 2', 'element': 'h2'},
+            {'name': 'Heading 3', 'element': 'h3'},
+            {'name': 'Heading 4', 'element': 'h4'},
+            {'name': 'Paragraph', 'element': 'p'},
+        ],
+        'format_tags': 'p;h1;h2;h3;h4;pre',
+        'removePlugins': 'elementspath',
+        'resize_enabled': True,
+    },
+}
 
 

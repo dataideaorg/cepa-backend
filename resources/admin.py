@@ -1,5 +1,4 @@
 from django.contrib import admin
-from .widgets import QuillEditorWidget
 from .models import BlogPost, NewsArticle, Publication, Event
 
 
@@ -30,12 +29,6 @@ class BlogPostAdmin(admin.ModelAdmin):
         }),
     )
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        # Apply Quill editor only to the content field
-        form.base_fields['content'].widget = QuillEditorWidget()
-        return form
-
 
 @admin.register(NewsArticle)
 class NewsArticleAdmin(admin.ModelAdmin):
@@ -63,12 +56,6 @@ class NewsArticleAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        # Apply Quill editor only to the content field
-        form.base_fields['content'].widget = QuillEditorWidget()
-        return form
 
 
 @admin.register(Publication)
