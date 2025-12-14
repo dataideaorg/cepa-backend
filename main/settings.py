@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'getinvolved',
     'fellowships',
     'focusareas',
+    'chatbot',
     'about',
     'home',
 ]

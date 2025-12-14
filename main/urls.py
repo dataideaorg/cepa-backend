@@ -16,6 +16,7 @@ urlpatterns = [
     path('focus-area/', include('focusareas.urls')),
     path('about/', include('about.urls')),
     path('home/', include('home.urls')),
+    path('chatbot/', include('chatbot.urls')),
 ]
 
 # Serve media files
