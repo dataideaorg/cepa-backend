@@ -66,11 +66,26 @@ def get_all_knowledge_base_documents():
         publications = Publication.objects.all()
         for pub in publications:
             if pub.pdf:  # Has PDF file
+                # Construct full URL using FULL_MEDIA_URL to point to backend
+                if hasattr(settings, 'FULL_MEDIA_URL'):
+                    pdf_url = settings.FULL_MEDIA_URL.rstrip('/') + '/' + str(pub.pdf)
+                else:
+                    pdf_url = settings.MEDIA_URL + str(pub.pdf)
+                
                 documents.append({
                     'id': pub.id,
                     'name': pub.title,
                     'path': pub.pdf.path,
-                    'url': pub.pdf.url if pub.pdf else pub.url,
+                    'url': pdf_url,
+                    'type': 'publication',
+                    'description': pub.description
+                })
+            elif pub.url:  # Has external URL
+                documents.append({
+                    'id': pub.id,
+                    'name': pub.title,
+                    'path': None,
+                    'url': pub.url,
                     'type': 'publication',
                     'description': pub.description
                 })
