@@ -141,17 +141,17 @@ def find_relevant_document(query, documents, conversation_context="", client=Non
     ])
 
     prompt = f"""You are a document search assistant for CEPA (Centre for Parliamentary Accountability).
-Given a user question and a list of documents, identify which document is most relevant.
-
-{conversation_context}
-
-User Question: {query}
-
-Available Documents:
-{doc_summaries}
-
-Respond with ONLY the document number (1, 2, 3, etc.) that is most relevant to the question.
-If no document is relevant, respond with "1"."""
+    Given a user question and a list of documents, identify which document is most relevant.
+    
+    {conversation_context}
+    
+    User Question: {query}
+    
+    Available Documents:
+    {doc_summaries}
+    
+    Respond with ONLY the document number (1, 2, 3, etc.) that is most relevant to the question.
+    If no document is relevant, respond with "1"."""
 
     try:
         response = client.messages.create(
@@ -186,18 +186,18 @@ def generate_answer(query, selected_doc, conversation_context="", client=None):
 
     prompt = f"""You are a helpful assistant answering questions about CEPA (Centre for Parliamentary Accountability) and parliamentary proceedings in Uganda.
 
-{conversation_context}
-
-User Question: {query}
-
-Document Name: {selected_doc['name']}
-Document Type: {selected_doc['type']}
-
-Document Content:
-{selected_doc.get('full_text', '')[:50000]}
-
-Please provide a clear, concise answer to the user's question based on the document content.
-If the answer is not in the document, say so clearly. Keep your answer under 300 words."""
+    {conversation_context}
+    
+    User Question: {query}
+    
+    Document Name: {selected_doc['name']}
+    Document Type: {selected_doc['type']}
+    
+    Document Content:
+    {selected_doc.get('full_text', '')[:50000]}
+    
+    Based on the information in this document, provide a clear and direct answer to the user's question. Answer naturally as if you are providing information from your knowledge base. Do not mention that you are reading from a document or that the user provided anything. Simply answer the question directly.
+    If the information needed to answer the question is not found in this document, clearly state that you could not find the specific information requested. Keep your answer concise and under 300 words."""
 
     try:
         response = client.messages.create(
