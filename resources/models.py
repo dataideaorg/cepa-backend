@@ -31,6 +31,10 @@ def upload_to_publication_pdfs(instance, filename):
     return os.path.join('publications', 'pdfs', filename)
 
 
+def upload_to_publication_images(instance, filename):
+    """Generate upload path for publication images"""
+    return os.path.join('publications', 'images', filename)
+
 class BlogPost(models.Model):
     """Model for blog posts and analysis articles"""
     id = models.CharField(max_length=255, primary_key=True, default=generate_uuid)
@@ -94,6 +98,7 @@ class Publication(models.Model):
     category = models.CharField(max_length=100)
     url = models.URLField(blank=True, null=True, validators=[URLValidator()])
     pdf = models.FileField(upload_to=upload_to_publication_pdfs, blank=True, null=True)
+    image = models.ImageField(upload_to=upload_to_publication_images, blank=True, null=True)
     featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)

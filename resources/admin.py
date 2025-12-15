@@ -67,6 +67,20 @@ class PublicationAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
     date_hierarchy = 'date'
 
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('title', 'type', 'category', 'date', 'featured')
+        }),
+        ('Content', {
+            'fields': ('description', 'url', 'pdf', 'image'),
+            'classes': ('wide',)
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):

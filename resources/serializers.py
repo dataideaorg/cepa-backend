@@ -28,14 +28,24 @@ class NewsArticleSerializer(serializers.ModelSerializer):
 
 class PublicationSerializer(serializers.ModelSerializer):
     """Serializer for Publication model"""
-    
+    image_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Publication
         fields = [
-            'id', 'title', 'type', 'date', 'description', 'category', 
-            'url', 'pdf', 'featured', 'created_at', 'updated_at'
+            'id', 'title', 'type', 'date', 'description', 'category',
+            'url', 'pdf', 'image', 'image_url', 'featured', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
+
+    def get_image_url(self, obj):
+        """Return absolute URL for publication image if available"""
+        if obj.image:
+            from django.conf import settings
+            base_url = settings.FULL_MEDIA_URL.rstrip('/') if hasattr(settings, 'FULL_MEDIA_URL') else settings.MEDIA_URL.rstrip('/')
+            image_path = str(obj.image).lstrip('/')
+            return f"{base_url}/{image_path}"
+        return None
 
 
 class EventSerializer(serializers.ModelSerializer):
