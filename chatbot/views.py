@@ -196,8 +196,8 @@ def generate_answer(query, selected_doc, conversation_context="", client=None):
     Document Content:
     {selected_doc.get('full_text', '')[:50000]}
     
-    Based on the information in this document, provide a clear and direct answer to the user's question. Answer naturally as if you are providing information from your knowledge base. Do not mention that you are reading from a document or that the user provided anything. Simply answer the question directly.
-    If the information needed to answer the question is not found in this document, clearly state that you could not find the specific information requested. Keep your answer concise and under 300 words."""
+    Please provide a clear, concise answer to the user's question based on the document content.
+    If the answer is not in the document, say so clearly. Keep your answer under 300 words."""
 
     try:
         response = client.messages.create(
