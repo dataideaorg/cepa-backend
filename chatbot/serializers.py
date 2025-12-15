@@ -57,7 +57,7 @@ class ChatSessionSerializer(serializers.ModelSerializer):
 
 class ChatSessionDetailSerializer(serializers.ModelSerializer):
     """Serializer for ChatSession model (detail view with messages)"""
-    messages = ChatMessageSerializer(many=True, read_only=True)
+    messages = serializers.SerializerMethodField()
 
     class Meta:
         model = ChatSession
@@ -66,6 +66,12 @@ class ChatSessionDetailSerializer(serializers.ModelSerializer):
             'is_active', 'messages', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'started_at', 'created_at', 'updated_at']
+
+    def get_messages(self, obj):
+        """Return only the latest 5 message pairs (10 messages total)"""
+        recent_messages = obj.messages.all().order_by('-created_at')[:10]
+        # Reverse to maintain chronological order
+        return ChatMessageSerializer(reversed(list(recent_messages)), many=True).data
 
 
 class ChatQuerySerializer(serializers.Serializer):
