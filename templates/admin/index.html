@@ -1,0 +1,30 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<div class="module" style="margin-top: 20px;">
+    <table style="width: 100%;">
+        <caption style="font-size: 16px; font-weight: bold; margin-bottom: 10px; text-align: left;">
+            <a href="#" style="text-decoration: none; color: #417690;">Media Management</a>
+        </caption>
+        <tbody>
+            <tr>
+                <th scope="row" style="padding: 10px;">
+                    <a href="{% url 'media_folders_list' %}" style="text-decoration: none; color: #417690; font-weight: normal;">
+                        Download Media Folders
+                    </a>
+                </th>
+                <td style="padding: 10px;">
+                    <a href="{% url 'media_folders_list' %}" class="button" style="background-color: #417690; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px;">
+                        View & Download
+                    </a>
+                </td>
+                <td style="padding: 10px; color: #666; font-size: 12px;">
+                    Download entire media folders as ZIP files
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

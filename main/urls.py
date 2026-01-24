@@ -4,10 +4,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.views.generic import TemplateView
+from . import views
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='landing_page.html'), name='landing-page'),
     path('admin/', admin.site.urls),
+    path('admin/media-folders/', views.media_folders_list, name='media_folders_list'),
+    path('admin/media-folders/download/<str:folder_name>/', views.download_media_folder, name='download_media_folder'),
     path('resources/', include('resources.urls')),
     path('multimedia/', include('multimedia.urls')),
     path('contact/', include('contact.urls')),
