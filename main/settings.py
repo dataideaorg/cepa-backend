@@ -255,6 +255,9 @@ CKEDITOR_CONFIGS = {
             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'],
             ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
             ['Link', 'Unlink'],
+            ['Image', 'Flash'],
+            ['Table', 'HorizontalRule', 'SpecialChar'],
+            ['Iframe'],
             ['RemoveFormat', 'Source'],
         ],
         'stylesSet': [
