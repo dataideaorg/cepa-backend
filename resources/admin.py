@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import BlogPost, NewsArticle, Publication, Event
+from .models import BlogPost, NewsArticle, Publication, Event, BlogComment, NewsComment
 
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'date', 'featured', 'created_at']
+    list_display = ['title', 'category', 'date', 'featured', 'views_count', 'created_at']
     list_filter = ['category', 'featured', 'date', 'created_at']
     search_fields = ['title', 'description', 'content']
     list_editable = ['featured']
@@ -20,7 +20,7 @@ class BlogPostAdmin(admin.ModelAdmin):
             'classes': ('wide',)
         }),
         ('Advanced', {
-            'fields': ('slug',),
+            'fields': ('slug', 'views_count'),
             'classes': ('collapse',)
         }),
         ('Metadata', {
@@ -28,11 +28,19 @@ class BlogPostAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+@admin.register(BlogComment)
+class BlogCommentAdmin(admin.ModelAdmin):
+    list_display = ['author_name', 'post', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['author_name', 'body']
+    readonly_fields = ['created_at']
 
 
 @admin.register(NewsArticle)
 class NewsArticleAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'date', 'featured', 'created_at']
+    list_display = ['title', 'category', 'date', 'featured', 'views_count', 'created_at']
     list_filter = ['category', 'featured', 'date', 'created_at']
     search_fields = ['title', 'description', 'content']
     list_editable = ['featured']
@@ -48,7 +56,7 @@ class NewsArticleAdmin(admin.ModelAdmin):
             'classes': ('wide',)
         }),
         ('Advanced', {
-            'fields': ('slug',),
+            'fields': ('slug', 'views_count'),
             'classes': ('collapse',)
         }),
         ('Metadata', {
@@ -56,6 +64,14 @@ class NewsArticleAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+@admin.register(NewsComment)
+class NewsCommentAdmin(admin.ModelAdmin):
+    list_display = ['author_name', 'article', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['author_name', 'body']
+    readonly_fields = ['created_at']
 
 
 @admin.register(Publication)

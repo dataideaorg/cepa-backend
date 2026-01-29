@@ -1,29 +1,49 @@
 from rest_framework import serializers
-from .models import BlogPost, NewsArticle, Publication, Event
+from .models import BlogPost, NewsArticle, Publication, Event, BlogComment, NewsComment
+
+
+class BlogCommentSerializer(serializers.ModelSerializer):
+    """Serializer for BlogComment model"""
+
+    class Meta:
+        model = BlogComment
+        fields = ['id', 'post', 'author_name', 'author_email', 'body', 'created_at']
+        read_only_fields = ['id', 'post', 'created_at']
+
+
+class NewsCommentSerializer(serializers.ModelSerializer):
+    """Serializer for NewsComment model"""
+
+    class Meta:
+        model = NewsComment
+        fields = ['id', 'article', 'author_name', 'author_email', 'body', 'created_at']
+        read_only_fields = ['id', 'article', 'created_at']
 
 
 class BlogPostSerializer(serializers.ModelSerializer):
     """Serializer for BlogPost model"""
-    
+
     class Meta:
         model = BlogPost
         fields = [
-            'id', 'title', 'date', 'category', 'description', 
-            'image', 'slug', 'featured', 'content', 'created_at', 'updated_at'
+            'id', 'title', 'date', 'category', 'description',
+            'image', 'slug', 'featured', 'content', 'views_count',
+            'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'views_count']
 
 
 class NewsArticleSerializer(serializers.ModelSerializer):
     """Serializer for NewsArticle model"""
-    
+
     class Meta:
         model = NewsArticle
         fields = [
-            'id', 'title', 'date', 'category', 'description', 
-            'image', 'slug', 'featured', 'content', 'created_at', 'updated_at'
+            'id', 'title', 'date', 'category', 'description',
+            'image', 'slug', 'featured', 'content', 'views_count',
+            'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'views_count']
 
 
 class PublicationSerializer(serializers.ModelSerializer):

@@ -4,10 +4,11 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
-from .models import BlogPost, NewsArticle, Publication, Event
+from .models import BlogPost, NewsArticle, Publication, Event, BlogComment, NewsComment
 from .serializers import (
-    BlogPostSerializer, NewsArticleSerializer, 
-    PublicationSerializer, EventSerializer, HomepageLatestSerializer
+    BlogPostSerializer, NewsArticleSerializer,
+    PublicationSerializer, EventSerializer, HomepageLatestSerializer,
+    BlogCommentSerializer, NewsCommentSerializer,
 )
 
 
@@ -57,6 +58,28 @@ class BlogPostViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+    @action(detail=True, methods=['post'], url_path='increment-view')
+    def increment_view(self, request, pk=None):
+        """Increment view count for a blog post"""
+        post = self.get_object()
+        post.views_count = (post.views_count or 0) + 1
+        post.save(update_fields=['views_count'])
+        return Response({'views_count': post.views_count})
+
+    @action(detail=True, methods=['get', 'post'], url_path='comments')
+    def comments(self, request, pk=None):
+        """List or create comments for a blog post"""
+        post = self.get_object()
+        if request.method == 'GET':
+            comments = post.comments.all()
+            serializer = BlogCommentSerializer(comments, many=True)
+            return Response(serializer.data)
+        elif request.method == 'POST':
+            serializer = BlogCommentSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(post=post)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class NewsArticleViewSet(viewsets.ModelViewSet):
     """ViewSet for NewsArticle model with full CRUD operations"""
@@ -85,8 +108,11 @@ class NewsArticleViewSet(viewsets.ModelViewSet):
         return Response(categories)
 
     @action(detail=False, methods=['get'])
-    def by_slug(self, request, slug=None):
-        """Get news article by slug"""
+    def by_slug(self, request):
+        """Get news article by slug (query param: slug=)"""
+        slug = request.query_params.get('slug')
+        if not slug:
+            return Response({'error': 'slug query parameter required'}, status=status.HTTP_400_BAD_REQUEST)
         try:
             article = self.queryset.get(slug=slug)
             serializer = self.get_serializer(article)
@@ -96,6 +122,28 @@ class NewsArticleViewSet(viewsets.ModelViewSet):
                 {'error': 'News article not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
+
+    @action(detail=True, methods=['post'], url_path='increment-view')
+    def increment_view(self, request, pk=None):
+        """Increment view count for a news article"""
+        article = self.get_object()
+        article.views_count = (article.views_count or 0) + 1
+        article.save(update_fields=['views_count'])
+        return Response({'views_count': article.views_count})
+
+    @action(detail=True, methods=['get', 'post'], url_path='comments')
+    def comments(self, request, pk=None):
+        """List or create comments for a news article"""
+        article = self.get_object()
+        if request.method == 'GET':
+            comments = article.comments.all()
+            serializer = NewsCommentSerializer(comments, many=True)
+            return Response(serializer.data)
+        elif request.method == 'POST':
+            serializer = NewsCommentSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(article=article)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class PublicationViewSet(viewsets.ModelViewSet):
