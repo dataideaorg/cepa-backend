@@ -1,0 +1,87 @@
+from django.db import models
+
+
+class PageHeroImage(models.Model):
+    """
+    Model for page-specific hero images.
+    """
+    PAGE_CHOICES = [
+        ('about', 'About Us'),
+        ('contact', 'Contact Us'),
+        ('citizens-voice', 'Citizens Voice'),
+        ('multimedia', 'Multimedia'),
+        ('get-involved', 'Get Involved'),
+        ('resources', 'Resources'),
+    ]
+
+    page_slug = models.CharField(
+        max_length=50,
+        choices=PAGE_CHOICES,
+        unique=True,
+        help_text="The page this hero image is for",
+    )
+    page_name = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Display name for the page (auto-filled from slug if empty)",
+    )
+    image = models.ImageField(
+        upload_to='page_heroes/',
+        help_text="Hero image for this page",
+    )
+    alt_text = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Alternative text for accessibility",
+    )
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Whether this hero image is active",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['page_slug']
+        verbose_name = 'Page Hero Image'
+        verbose_name_plural = 'Page Hero Images'
+
+    def save(self, *args, **kwargs):
+        if not self.page_name:
+            for slug, name in self.PAGE_CHOICES:
+                if slug == self.page_slug:
+                    self.page_name = name
+                    break
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.page_name or self.page_slug} Hero Image"
+
+
+class CitizensVoiceFeedbackLinks(models.Model):
+    """
+    Singleton-style config for Citizens Voice page: Google form URLs.
+    """
+    ask_mp_form_url = models.URLField(
+        max_length=500,
+        blank=True,
+        help_text="Google form URL for 'Ask your MP'",
+    )
+    comment_bill_form_url = models.URLField(
+        max_length=500,
+        blank=True,
+        help_text="Google form URL for 'Comment on a bill'",
+    )
+    feedback_law_form_url = models.URLField(
+        max_length=500,
+        blank=True,
+        help_text="Google form URL for 'Feedback on a law'",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Citizens Voice feedback links"
+        verbose_name_plural = "Citizens Voice feedback links"
+
+    def __str__(self):
+        return "Citizens Voice feedback links"

@@ -1,7 +1,9 @@
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import ContactSerializer, NewsletterSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from .models import Feedback
+from .serializers import ContactSerializer, NewsletterSerializer, FeedbackSerializer
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -130,3 +132,38 @@ CEPA Team
         return Response({'message': 'Newsletter subscription successful'}, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def _get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        return x_forwarded_for.split(',')[0].strip()
+    return request.META.get('REMOTE_ADDR')
+
+
+class FeedbackViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for feedback submissions from Citizens Voice page.
+    Only allows creating new submissions (POST) for public.
+    """
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
+    http_method_names = ['post', 'get', 'head', 'options']
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        feedback = serializer.save(
+            ip_address=_get_client_ip(request),
+            user_agent=request.META.get('HTTP_USER_AGENT', ''),
+        )
+        return Response({
+            'success': True,
+            'message': 'Thank you for your feedback! We appreciate your input.',
+            'id': feedback.id,
+        }, status=status.HTTP_201_CREATED)

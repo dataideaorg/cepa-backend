@@ -1,11 +1,19 @@
-from rest_framework import viewsets, status
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
-from .models import Podcast, Video, GalleryGroup, GalleryImage
+from .models import (
+    Podcast, Video, GalleryGroup, GalleryImage,
+    Poll, PollOption, PollVote, XPollEmbed, Trivia, TriviaQuestion,
+)
 from .serializers import (
-    PodcastSerializer, VideoSerializer, 
-    GalleryGroupSerializer, GalleryGroupListSerializer, GalleryImageSerializer
+    PodcastSerializer, VideoSerializer,
+    GalleryGroupSerializer, GalleryGroupListSerializer, GalleryImageSerializer,
+    PollSerializer, XPollEmbedSerializer,
+    TriviaListSerializer, TriviaDetailSerializer,
 )
 
 
@@ -123,3 +131,114 @@ class GalleryImageViewSet(viewsets.ModelViewSet):
         images = self.queryset.filter(group__in=featured_groups)
         serializer = self.get_serializer(images, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+class PollPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 50
+
+
+class PollViewSet(viewsets.ModelViewSet):
+    queryset = Poll.objects.all().order_by('-featured', '-created_at')
+    serializer_class = PollSerializer
+    pagination_class = PollPagination
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['status', 'category', 'featured']
+    search_fields = ['title', 'description', 'category']
+    ordering_fields = ['created_at', 'start_date', 'end_date', 'title']
+    ordering = ['-featured', '-created_at']
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST' and 'vote' in request.path:
+            return csrf_exempt(super().dispatch)(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
+
+    @action(detail=True, methods=['post'], url_path='vote')
+    def vote(self, request, pk=None):
+        poll = self.get_object()
+        if not poll.is_active:
+            return Response(
+                {'error': 'This poll is not currently active.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        option_id = request.data.get('option_id')
+        if option_id is None:
+            return Response(
+                {'error': 'option_id is required.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            option_id = int(option_id)
+        except (TypeError, ValueError):
+            return Response(
+                {'error': 'option_id must be a number.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            option = PollOption.objects.get(id=option_id, poll=poll)
+        except PollOption.DoesNotExist:
+            return Response(
+                {'error': 'Invalid option selected.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        ip_address = self._get_client_ip(request)
+        session_id = (getattr(request.session, 'session_key', None) or '') or request.data.get('session_id', '')
+        if not poll.allow_multiple_votes:
+            existing = PollVote.objects.filter(
+                poll=poll, ip_address=ip_address, session_id=session_id,
+            ).first()
+            if existing:
+                return Response(
+                    {'error': 'You have already voted on this poll.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        PollVote.objects.create(
+            poll=poll, option=option,
+            ip_address=ip_address or None,
+            session_id=session_id or '',
+        )
+        return Response({'success': True}, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['get'], url_path='results')
+    def results(self, request, pk=None):
+        poll = self.get_object()
+        options = PollOption.objects.filter(poll=poll).order_by('order', 'created_at')
+        total_votes = poll.total_votes
+        results_list = [
+            {
+                'option_id': opt.id,
+                'text': opt.text,
+                'vote_count': opt.vote_count,
+                'percentage': opt.vote_percentage,
+            }
+            for opt in options
+        ]
+        return Response({
+            'poll_id': poll.id,
+            'poll_title': poll.title,
+            'total_votes': total_votes,
+            'results': results_list,
+        })
+
+    def _get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            return x_forwarded_for.split(',')[0].strip()
+        return request.META.get('REMOTE_ADDR')
+
+
+class XPollEmbedViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = XPollEmbed.objects.all()
+    serializer_class = XPollEmbedSerializer
+    pagination_class = None
+
+
+class TriviaViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Trivia.objects.filter(is_active=True).order_by('order', '-created_at')
+    pagination_class = None
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return TriviaDetailSerializer
+        return TriviaListSerializer
