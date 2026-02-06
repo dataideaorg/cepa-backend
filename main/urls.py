@@ -8,7 +8,6 @@ from .views import media_folders_list, download_media_folder
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='landing_page.html'), name='landing-page'),
-    # Media download views (before admin to ensure proper routing)
     path('admin/media-downloads/', media_folders_list, name='media_folders_list'),
     path('admin/media-downloads/<str:folder_name>/', download_media_folder, name='download_media_folder'),
     path('admin/', admin.site.urls),
@@ -21,6 +20,10 @@ urlpatterns = [
     path('about/', include('about.urls')),
     path('home/', include('home.urls')),
     path('chatbot/', include('chatbot.urls')),
+    # API routes for Citizens Voice (frontend expects /api/...)
+    path('api/contact/', include('contact.api_urls')),
+    path('api/settings/', include('settings.urls')),
+    path('api/multimedia/', include('multimedia.urls')),
 ]
 
 # Serve media files
