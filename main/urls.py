@@ -21,9 +21,9 @@ urlpatterns = [
     path('home/', include('home.urls')),
     path('chatbot/', include('chatbot.urls')),
     # API routes for Citizens Voice (frontend expects /api/...)
-    path('api/contact/', include('contact.api_urls')),
-    path('api/settings/', include('settings.urls')),
-    path('api/multimedia/', include('multimedia.urls')),
+    path('contact/', include('contact.api_urls')),
+    path('settings/', include('settings.urls')),
+    path('multimedia/', include('multimedia.urls')),
 ]
 
 # Serve media files
