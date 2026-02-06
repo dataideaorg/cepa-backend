@@ -31,7 +31,8 @@ class PageHeroImageViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PageHeroImageSerializer
     lookup_field = 'page_slug'
 
-    def retrieve(self, request, page_slug=None, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
+        page_slug = kwargs.get('page_slug')
         try:
             hero_image = PageHeroImage.objects.get(page_slug=page_slug, is_active=True)
             serializer = self.get_serializer(hero_image)
