@@ -58,7 +58,7 @@ class BlogPostViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-    @action(detail=True, methods=['post'], url_path='increment-view')
+    @action(detail=True, methods=['post'], url_path='increment_view')
     def increment_view(self, request, pk=None):
         """Increment view count for a blog post"""
         post = self.get_object()
@@ -123,7 +123,7 @@ class NewsArticleViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-    @action(detail=True, methods=['post'], url_path='increment-view')
+    @action(detail=True, methods=['post'], url_path='increment_view')
     def increment_view(self, request, pk=None):
         """Increment view count for a news article"""
         article = self.get_object()

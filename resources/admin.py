@@ -9,6 +9,7 @@ class BlogPostAdmin(admin.ModelAdmin):
     search_fields = ['title', 'description', 'content']
     list_editable = ['featured']
     readonly_fields = ['created_at', 'updated_at']
+    prepopulated_fields = {'slug': ('title',)}
     date_hierarchy = 'date'
 
     fieldsets = (
@@ -45,6 +46,7 @@ class NewsArticleAdmin(admin.ModelAdmin):
     search_fields = ['title', 'description', 'content']
     list_editable = ['featured']
     readonly_fields = ['created_at', 'updated_at']
+    prepopulated_fields = {'slug': ('title',)}
     date_hierarchy = 'date'
 
     fieldsets = (

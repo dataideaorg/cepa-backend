@@ -44,7 +44,12 @@ class BlogPost(models.Model):
     category = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(upload_to=upload_to_blog_images, blank=True, null=True)
-    slug = models.CharField(max_length=500, unique=True, blank=True)
+    slug = models.CharField(
+        max_length=500,
+        unique=True,
+        blank=True,
+        help_text="Leave blank to auto-generate from title.",
+    )
     featured = models.BooleanField(default=False)
     content = RichTextField(blank=True, null=True)
     views_count = models.PositiveIntegerField(default=0)
@@ -55,6 +60,24 @@ class BlogPost(models.Model):
         ordering = ['-created_at']
         verbose_name = 'Blog Post'
         verbose_name_plural = 'Blog Posts'
+
+    def _get_unique_slug(self, base_slug):
+        slug = base_slug[:500]
+        if not BlogPost.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+            return slug
+        for i in range(1, 10000):
+            candidate = f"{base_slug[:495]}-{i}" if len(base_slug) > 495 else f"{base_slug}-{i}"
+            if not BlogPost.objects.filter(slug=candidate).exclude(pk=self.pk).exists():
+                return candidate
+        return f"{base_slug[:490]}-{uuid.uuid4().hex[:8]}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            base_slug = slugify(self.title)
+            if not base_slug:
+                base_slug = f"blog-{self.id or uuid.uuid4().hex[:8]}"
+            self.slug = self._get_unique_slug(base_slug)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -68,7 +91,12 @@ class NewsArticle(models.Model):
     category = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(upload_to=upload_to_news_images, blank=True, null=True)
-    slug = models.CharField(max_length=500, unique=True, blank=True)
+    slug = models.CharField(
+        max_length=500,
+        unique=True,
+        blank=True,
+        help_text="Leave blank to auto-generate from title.",
+    )
     featured = models.BooleanField(default=False)
     content = RichTextField(blank=True, null=True)
     views_count = models.PositiveIntegerField(default=0)
@@ -79,6 +107,24 @@ class NewsArticle(models.Model):
         ordering = ['-created_at']
         verbose_name = 'News Article'
         verbose_name_plural = 'News Articles'
+
+    def _get_unique_slug(self, base_slug):
+        slug = base_slug[:500]
+        if not NewsArticle.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+            return slug
+        for i in range(1, 10000):
+            candidate = f"{base_slug[:495]}-{i}" if len(base_slug) > 495 else f"{base_slug}-{i}"
+            if not NewsArticle.objects.filter(slug=candidate).exclude(pk=self.pk).exists():
+                return candidate
+        return f"{base_slug[:490]}-{uuid.uuid4().hex[:8]}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            base_slug = slugify(self.title)
+            if not base_slug:
+                base_slug = f"news-{self.id or uuid.uuid4().hex[:8]}"
+            self.slug = self._get_unique_slug(base_slug)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
